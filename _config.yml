@@ -18,7 +18,7 @@ description: >-
   at Middlesex University London.
 
 # Fill in the protocol & hostname for your site
-url: ""
+url: "https://shuaibu-oluwatunmise.github.io"
 
 github:
   username: Shuaibu-oluwatunmise
@@ -54,7 +54,7 @@ pwa:
 
 paginate: 10
 
-baseurl: ""
+baseurl: "/fyp-perception-slam"
 
 # ------------ The following options are not recommended to be modified ------------------
 
