@@ -59,7 +59,7 @@ I'm building this as a **highly modular ROS2-based system**. Without going into 
 - **Sensor nodes** - Publish camera and LiDAR data
 - **Detection nodes** - Run object detection algorithms (like YOLO) to find cones
 - **Localization nodes** - Convert 2D detections into 3D positions
-- **SLAM nodes** - Build the map and track the car's position
+- **SLAM nodes** - Build the map and track the car's position (completion of this is honestly a nice to have, the perception pipeline is heavy enough as it is)
 
 The beauty of this modular approach is that each node can be developed, tested, and improved independently. If I need to swap out the detection algorithm or upgrade the SLAM implementation, I can do that without rewriting the entire system.
 
@@ -94,13 +94,13 @@ For me, success on this project means a few things:
 
 **I've built something that actually works** - At the end of the day, I want a functional perception and SLAM system that can detect cones, map the track, and localize the vehicle in real-time.
 
-If I can achieve those things, I'll consider this project a success.
+If I can like 3 out of those things, I'll consider this project a success.
 
 ## What's Next?
 
 Over the coming weeks, I'll be diving deep into implementation. I'll be documenting the process here—sharing what works, what doesn't, and what I learn along the way.
 
-Tomorrow, I'll be starting the literature review in earnest and beginning to set up my development environment. By the end of this week, I'm aiming to have Node 1a (the camera publisher) up and running.
+Tomorrow, I'll begin to set up my development environment. By the end of this week, I'm aiming to have at least a ROS2 node (the camera publisher) up and running.
 
 It's going to be a challenging few months, but I'm genuinely excited to see where this goes.
 
@@ -108,4 +108,3 @@ Thanks for following along!
 
 ---
 
-**Next up:** Week 2 Day 2 - Understanding Perception and SLAM: The Foundation of Autonomous Navigation
