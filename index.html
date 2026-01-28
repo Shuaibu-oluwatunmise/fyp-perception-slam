@@ -2,3 +2,26 @@
 layout: home
 # Index page
 ---
+
+<div id="greeting-container" style="display: none; margin-bottom: 3rem; margin-top: 1rem; padding-left: 0.5rem;">
+  <h1 id="greeting-text" style="margin-top: 0; font-weight: 800; font-size: 2.5rem; color: var(--heading-color); letter-spacing: -1px;">Welcome</h1>
+  <p style="margin-bottom: 0; color: var(--text-muted); font-size: 1.25rem; font-weight: 400;">Welcome to my blog! Follow along as I build the Perception & SLAM system.</p>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const hour = new Date().getHours();
+    let greeting = "Welcome";
+    
+    if (hour >= 5 && hour < 12) {
+        greeting = "Good Morning";
+    } else if (hour >= 12 && hour < 18) {
+        greeting = "Good Afternoon";
+    } else {
+        greeting = "Good Evening";
+    }
+    
+    document.getElementById("greeting-text").innerHTML = `${greeting}!`;
+    document.getElementById("greeting-container").style.display = "block";
+});
+</script>
