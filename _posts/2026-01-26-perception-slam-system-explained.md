@@ -4,7 +4,6 @@ date: 2026-01-26 18:00:00 +0000
 categories: [Technical Deep-Dive, Week 2]
 tags: [fyp, perception, slam, autonomous-racing, architecture]
 ---
-
 ## The Big Picture: What Problem Am I Solving?
 
 Alright, let's get into it. What exactly am I building, and why does it matter?
@@ -67,19 +66,24 @@ The beauty of this modular approach is that each node can be developed, tested, 
 
 Honestly, this project is as much about learning new skills as it is about building a working system. Here's what I'm hoping to gain:
 
-###  Simulation and Data Handling
+### Simulation and Data Handling
+
 I want to get really good at working with simulation environments (like IPG CarMaker) and handling data from simulated sensors. This is a skill that's hugely valuable in industry because it saves so much time and money. Instead of testing everything on physical hardware, you can validate your algorithms in simulation first.
 
-###  Project Management
+### Project Management
+
 Managing a multi-month project with clear milestones, deliverables, and timelines is a skill in itself. I want to get better at planning, tracking progress, and staying organized throughout the development process.
 
-###  ROS2 System Design
+### ROS2 System Design
+
 I want to be confident in designing and implementing ROS2 systems from scratch. Understanding how to structure nodes, manage topics, handle data flow, and integrate different components is a core skill for robotics engineering.
 
-###  Sensor Fusion and Perception Pipelines
+### Sensor Fusion and Perception Pipelines
+
 Learning how to combine data from multiple sensors (camera + LiDAR) and build robust perception systems is something I'm really excited about. This is at the heart of modern autonomous systems.
 
-###  Real-World Problem Solving
+### Real-World Problem Solving
+
 Beyond the technical skills, I want to get better at debugging, troubleshooting, and finding creative solutions when things don't work as expected (which, let's be real, happens a lot in robotics).
 
 ## What Does Success Look Like?
@@ -94,7 +98,7 @@ For me, success on this project means a few things:
 
 **I've built something that actually works** - At the end of the day, I want a functional perception and SLAM system that can detect cones, map the track, and localize the vehicle in real-time.
 
-If I can like 3 out of those things, I'll consider this project a success.
+If I can achieve like 3 out of those things, I'll consider this project a success.
 
 ## What's Next?
 
@@ -104,7 +108,6 @@ Tomorrow, I'll begin to set up my development environment. By the end of this we
 
 It's going to be a challenging few months, but I'm genuinely excited to see where this goes.
 
-Thanks for following along! 
+Thanks for following along!
 
 ---
-
