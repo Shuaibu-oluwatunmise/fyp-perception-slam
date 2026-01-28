@@ -5,7 +5,7 @@ icon: fas fa-tasks
 order: 3
 ---
 
-This updated Gantt chart visualizes the complete roadmap for the semester, highlighting the critical **3-Phase Perception Strategy** (Camera, Fusion, Simulation) and the subsequent SLAM implementation. It serves as the 'North Star' for tracking weekly progress, dependencies, and deliverables ensuring we stay on track for the final deadline.
+This Gantt chart outlines the project timeline and implementation plan. It breaks down the key phases for Perception and SLAM, though it is subject to change as the project develops and I learn more.
 
 ## Project Timeline Visualization
 
