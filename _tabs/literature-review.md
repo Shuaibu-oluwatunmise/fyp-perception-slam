@@ -103,7 +103,7 @@ summary::-webkit-details-marker {
 <div class="paper-item">
     <span class="paper-citation">[2] N. Vödisch, D. Dodel, and M. Schötz, "FSOCO: The Formula Student Objects in Context Dataset," <em>SAE International Journal of Connected and Automated Vehicles</em>, vol. 5, 2022.</span>
     <div class="paper-links">
-        <a href="https://www.fsoco-dataset.com/" target="_blank"><i class="fas fa-database"></i> View Dataset</a> | 
+        <a href="https://fsoco.github.io/fsoco-dataset/" target="_blank"><i class="fas fa-database"></i> View Dataset</a> | 
         <a href="https://arxiv.org/abs/2012.07139" target="_blank"><i class="fas fa-file-pdf"></i> Read Paper</a>
     </div>
     <div class="paper-relevance">
