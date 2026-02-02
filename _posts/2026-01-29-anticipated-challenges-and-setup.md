@@ -52,7 +52,7 @@ Whether that topic comes from a $20,000 simulator, a real camera, or a pre-recor
 So, here is the new plan:
 1.  **Source Real Data:** I’m going to use actual video footage from Formula Student competitions.
 2.  **Build a Substitute Publisher:** I’ll write a node (Node 1a) that reads this video file and publishes it to the `/camera/image_raw` topic, mimicking the live stream.
-3.  **Fake the Depth:** Since video doesn't have depth, I'll create a "fake" depth publisher to satisfy the system's requirements for Phase 1 testing.
+3.  **Mock the Depth:** Since video doesn't have depth, I'll create a "mock" depth publisher to satisfy the system's requirements for Phase 1 testing.
 
 This allows me to build the *entire* perception pipeline (YOLO detection, localizations) right now. When the CarMaker license finally lands, all I have to do is unplug the "Substitute Publisher" and plug in the "CarMaker Bridge." The rest of the system won't even blink hopefully.
 
