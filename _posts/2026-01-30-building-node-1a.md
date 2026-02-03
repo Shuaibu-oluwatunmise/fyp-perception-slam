@@ -13,8 +13,8 @@ The goal was simple: get video footage publishing to `/camera/image_raw` so I co
 
 It works.
 
-{% include embed/youtube.html id='xi28kF3kCN8' %}
-_Demo: Node 1a publishing video footage to ROS 2 topics at 30 Hz (placeholder - will be replaced with actual demo)_
+{% include embed/youtube.html id='htFxsgbLq3o' %}
+_Demo: Node 1a publishing video footage to ROS 2 topics at 30 Hz_
 
 
 I can see the video playing in `rqt_image_view`. The topics are publishing at 30 Hz. The mock depth is flowing alongside the RGB frames with matching timestamps—I could even visualize the depth map in `rqt_image_view` to confirm it was publishing correctly.
