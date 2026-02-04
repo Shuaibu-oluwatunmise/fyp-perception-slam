@@ -40,7 +40,7 @@ Based on the survey papers I read [^6], Graph-based SLAM (which SLAM Toolbox use
 ## The Consensus: Late Fusion
 
 Finally, how do we combine the Camera and LiDAR?
-Paper [^1] was really insightful here. It compared "Early Fusion" (merging raw pixels and points) vs "Late Fusion" (detecting objects separately and merging the lists).
+A recent survey on multi-sensor fusion for autonomous vehicles [^1] was really insightful here. It compared "Early Fusion" (merging raw pixels and points) vs "Late Fusion" (detecting objects separately and merging the lists).
 
 For a student project, **Late Fusion** seems to be the only sane choice. Debugging a "black box" neural network that takes two complex inputs is a nightmare. With Late Fusion, I can debug the Camera detector in isolation, debug the LiDAR clusterer in isolation, and then just write a simple algorithm to match them up in 3D space.
 

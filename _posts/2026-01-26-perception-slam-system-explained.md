@@ -58,7 +58,7 @@ I'm building this as a **highly modular ROS2-based system**. Without going into 
 - **Sensor nodes** - Publish camera and LiDAR data
 - **Detection nodes** - Run object detection algorithms (like YOLO) to find cones
 - **Localization nodes** - Convert 2D detections into 3D positions
-- **SLAM nodes** - Build the map and track the car's position (completion of this is honestly a nice to have, the perception pipeline is heavy enough as it is)
+- **SLAM nodes** - Build the map and track the car's position (completing this is a nice-to-have; the perception pipeline is the main priority)
 
 The beauty of this modular approach is that each node can be developed, tested, and improved independently. If I need to swap out the detection algorithm or upgrade the SLAM implementation, I can do that without rewriting the entire system.
 

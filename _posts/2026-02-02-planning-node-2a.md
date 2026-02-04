@@ -36,6 +36,15 @@ The dataset includes thousands of labeled images with four cone classes:
 
 Each image comes with bounding box annotations, which is exactly what YOLO needs for training.
 
+**Why FSOCO over other datasets?**
+
+I considered using generic object detection datasets like COCO or creating my own by manually labeling frames from the FSAI Chalmers video. But FSOCO is purpose-built for Formula Student, which means:
+- The cone colors, sizes, and placements match actual competition standards
+- The camera angles and perspectives are realistic for onboard mounting
+- The environmental conditions (track surfaces, lighting, weather) are representative of what I'll encounter
+
+Using a domain-specific dataset should give me better detection accuracy than trying to fine-tune a generic model.
+
 I need to:
 1. Download the FSOCO dataset
 2. Verify the annotations are correct
