@@ -28,6 +28,7 @@ This technical deep-dive provides a comprehensive analysis of the YOLOv8n baseli
 - **Target Hardware:** NVIDIA Jetson AGX Orin
 
 ### Hyperparameters
+
 | Parameter | Value | Rationale |
 |-----------|-------|-----------|
 | **Epochs** | 100 | With early stopping (patience=15) |
@@ -38,6 +39,7 @@ This technical deep-dive provides a comprehensive analysis of the YOLOv8n baseli
 | **AMP** | Enabled | Mixed precision for faster training |
 
 ### Data Augmentation Strategy
+
 | Augmentation | Value | Purpose |
 |--------------|-------|---------|
 | **HSV-Hue** | 0.015 | Minimal color shift (preserve cone colors) |
