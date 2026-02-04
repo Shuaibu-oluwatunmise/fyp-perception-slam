@@ -73,6 +73,9 @@ collections:
   tabs:
     output: true
     sort_by: order
+  techposts:
+    output: true
+    permalink: /techposts/:title/
 
 defaults:
   - scope:
@@ -83,6 +86,14 @@ defaults:
       comments: true
       toc: true
       permalink: /posts/:title/
+  - scope:
+      path: ""
+      type: techposts
+    values:
+      layout: post
+      comments: true
+      toc: true
+      permalink: /techposts/:title/
   - scope:
       path: _drafts
     values:

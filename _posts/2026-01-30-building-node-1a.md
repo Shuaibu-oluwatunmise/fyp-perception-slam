@@ -35,6 +35,8 @@ I added a looping feature so the video automatically restarts when it ends. This
 
 The launch system is also flexible. I can configure the video path, publishing rate, and mock depth parameters without touching the code. Just pass different arguments to the launch file and the node adapts.
 
+> **For a comprehensive technical breakdown of Node 1a's architecture, implementation details, and design decisions, see the [Technical Deep-Dive: Node 1a Camera Publisher](/fyp-perception-slam/techposts/node-1a-camera-publisher/).**
+
 ## The Mock Depth Solution
 
 The camera publisher was working, but there was still a problem: Node 3 (the 3D localizer) expects both RGB *and* depth data to calculate cone positions in 3D space.
