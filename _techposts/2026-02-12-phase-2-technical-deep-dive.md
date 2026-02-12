@@ -3,10 +3,7 @@ title: "Technical Deep Dive: Phase 2 Architecture & Implementation"
 date: 2026-02-12 01:30:00 +0000
 categories: [Week 4, Technical Deep Dive]
 tags: [ros2, architecture, implementation, code-analysis, fusion, pcl, dbscan]
-image:
-  path: /assets/img/thumbnails/phase-2-complete-thumb.jpg
-  alt: Phase 2 Architecture Visualization
-  header: false
+
 pin: true
 ---
 
