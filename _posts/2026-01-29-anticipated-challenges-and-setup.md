@@ -4,6 +4,10 @@ date: 2026-01-29 09:00:00 +0000
 categories: [Technical Deep-Dive, Week 2]
 tags: [ros2, jetson, hil, simulation, dev-diary]
 pin: false
+image:
+  path: /assets/img/thumbnails/5.png
+  alt: Anticipated Challenges and Setup
+  header: false
 ---
 I’m itching to write code because that's just i would normally work on my side projects. Honestly, the planning phase is necessary, but I really just want to see the node running and data flow. But before I can do that, I need to talk about the hardware—and a major issue that has come up. I sort of saw this coming a while ago, but I was really hoping it would be sorted by now.
 

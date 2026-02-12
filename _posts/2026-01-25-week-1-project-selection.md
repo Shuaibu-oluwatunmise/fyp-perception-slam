@@ -3,6 +3,10 @@ title: "Week 1: Project Selection and Initial Research"
 date: 2026-01-25 20:00:00 +0000
 categories: [Project Updates, Week 1]
 tags: [fyp, planning, research, project-selection]
+image:
+  path: /assets/img/thumbnails/1.png
+  alt: Project Selection and Research
+  header: false
 ---
 
 ## Welcome to My Final Year Project Journey!

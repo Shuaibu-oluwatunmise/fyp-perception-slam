@@ -3,6 +3,10 @@ title: "Key Research Findings: Defining the Baseline Architecture"
 date: 2026-01-27 14:00:00 +0000
 categories: [Technical Deep-Dive, Week 2]
 tags: [research, architecture, yolo, slam, design-decisions]
+image:
+  path: /assets/img/thumbnails/3.png
+  alt: Technical Research Findings
+  header: false
 pin: false
 ---
 After spending the last few days buried in research papers (and honestly, getting a bit overwhelmed by the number of options), I’ve finally started to narrow down the architecture for the perception system.

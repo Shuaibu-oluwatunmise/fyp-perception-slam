@@ -3,6 +3,10 @@ title: "The Missing Link: Why Phase 2 Wasn't Finished"
 date: 2026-02-12 01:00:00 +0000
 categories: [Week 4, Phase 2]
 tags: [ros2, tf2, coordinate-systems, slam-integration, node-4]
+image:
+  path: /assets/img/thumbnails/16.png
+  alt: Frame Transformation Result
+  header: false
 pin: false
 ---
 

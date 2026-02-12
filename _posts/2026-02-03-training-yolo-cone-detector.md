@@ -4,6 +4,10 @@ date: 2026-02-03 10:00:00 +0000
 categories: [Technical Deep-Dive, Week 3]
 tags: [yolo, cone-detection, machine-learning, training, fsoco]
 pin: false
+image:
+  path: /assets/img/thumbnails/8.png
+  alt: Training YOLO Cone Detector
+  header: false
 ---
 
 Yesterday, I planned the approach for Node 2a. Today, I trained the model.

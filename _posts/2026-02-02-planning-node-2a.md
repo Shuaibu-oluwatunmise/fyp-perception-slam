@@ -4,6 +4,10 @@ date: 2026-02-02 09:00:00 +0000
 categories: [Planning, Week 3]
 tags: [yolo, cone-detection, planning, node-2a, dataset]
 pin: false
+image:
+  path: /assets/img/thumbnails/7.png
+  alt: Planning Node 2a
+  header: false
 ---
 
 Node 1a is working. Video footage is flowing through the pipeline at 30 Hz. Now it's time to teach the system what a cone actually looks like.

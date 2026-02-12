@@ -4,6 +4,10 @@ date: 2026-02-05 09:00:00 +0000
 categories: [Planning, Week 3]
 tags: [ros2, 3d-localization, camera-intrinsics, planning, node-3]
 pin: false
+image:
+  path: /assets/img/thumbnails/10.png
+  alt: Planning Node 3
+  header: false
 ---
 
 Node 2a is working. It's detecting cones and publishing bounding boxes at 30 FPS. But there's a problem.

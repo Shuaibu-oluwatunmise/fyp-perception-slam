@@ -4,6 +4,10 @@ date: 2026-02-04 17:00:00 +0000
 categories: [Week 3]
 tags: [ros2, yolo, perception, opencv, debugging]
 pin: false
+image:
+  path: /assets/img/thumbnails/9.png
+  alt: Building Node 2a
+  header: false
 ---
 
 The YOLOv8 model was trained. Now it needed to run in the ROS 2 pipeline.

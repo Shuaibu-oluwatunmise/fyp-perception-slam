@@ -3,6 +3,10 @@ title: "Phase 2 Complete: Sensor Fusion"
 date: 2026-02-11 17:00:00 +0000
 categories: [Week 4, Phase 2]
 tags: [ros2, sensor-fusion, camera-lidar-fusion, phase-2-complete]
+image:
+  path: /assets/img/thumbnails/15.png
+  alt: Sensor Fusion Output
+  header: false
 pin: false
 ---
 

@@ -3,6 +3,10 @@ title: "What Am I Actually Building? The Perception + SLAM System Explained"
 date: 2026-01-26 18:00:00 +0000
 categories: [Technical Deep-Dive, Week 2]
 tags: [fyp, perception, slam, autonomous-racing, architecture]
+image:
+  path: /assets/img/thumbnails/2.png
+  alt: System Architecture Diagram
+  header: false
 ---
 ## The Big Picture: What Problem Am I Solving?
 

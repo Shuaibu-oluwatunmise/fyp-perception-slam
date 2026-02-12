@@ -3,6 +3,10 @@ title: "Building Node 1b: The LiDAR Publisher"
 date: 2026-02-09 17:00:00 +0000
 categories: [Week 4, Phase 2]
 tags: [ros2, lidar, point-cloud, velodyne, implementation]
+image:
+  path: /assets/img/thumbnails/13.png
+  alt: Node 1b LiDAR Output
+  header: false
 pin: false
 ---
 

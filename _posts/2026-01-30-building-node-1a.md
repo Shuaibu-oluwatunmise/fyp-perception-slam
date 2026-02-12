@@ -4,6 +4,10 @@ date: 2026-01-30 17:00:00 +0000
 categories: [Technical Deep-Dive, Week 2]
 tags: [ros2, perception, implementation, node-1a, opencv]
 pin: false
+image:
+  path: /assets/img/thumbnails/6.png
+  alt: Building Node 1a
+  header: false
 ---
 Yesterday, I outlined the "Substitute Data" strategy. Today, I built it.
 

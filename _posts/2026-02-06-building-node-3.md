@@ -4,6 +4,10 @@ date: 2026-02-06 17:00:00 +0000
 categories: [Week 3]
 tags: [ros2, 3d-localization, perception, phase-1, node-3]
 pin: false
+image:
+  path: /assets/img/thumbnails/11.png
+  alt: Building Node 3
+  header: false
 ---
 
 Node 3 is done. The perception pipeline is complete.

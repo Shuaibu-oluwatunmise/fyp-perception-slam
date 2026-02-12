@@ -29,7 +29,7 @@ script_includes:
 
       <!-- lastmod date REMOVED as per user request -->
 
-      {% if page.image %}
+      {% if page.image and page.image.header != false %}
         {% capture src %}src="{{ page.image.path | default: page.image }}"{% endcapture %}
         {% capture class %}class="preview-img{% if page.image.no_bg %}{{ ' no-bg' }}{% endif %}"{% endcapture %}
         {% capture alt %}alt="{{ page.image.alt | xml_escape | default: "Preview Image" }}"{% endcapture %}

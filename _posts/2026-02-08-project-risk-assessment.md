@@ -4,6 +4,10 @@ date: 2026-02-08 14:00:00 +0000
 categories: [Project Management, Week 3]
 tags: [risk-management, planning, safety, methodology]
 pin: false
+image:
+  path: /assets/img/thumbnails/12.png
+  alt: Project Risk Assessment
+  header: false
 ---
 
 As we approach the halfway mark, we need to formalize the **Risk Assessment**.

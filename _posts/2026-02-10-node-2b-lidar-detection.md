@@ -3,6 +3,10 @@ title: "Building Node 2b: LiDAR Cone Detection"
 date: 2026-02-10 17:00:00 +0000
 categories: [Week 4, Phase 2]
 tags: [ros2, lidar, pcl, point-cloud-processing, clustering]
+image:
+  path: /assets/img/thumbnails/14.png
+  alt: Node 2b Clustering Output
+  header: false
 pin: false
 ---
 

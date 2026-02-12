@@ -4,6 +4,10 @@ date: 2026-01-28 09:00:00 +0000
 categories: [Planning, Week 2]
 tags: [planning, architecture, roadmap, yolo, fusion]
 pin: false
+image:
+  path: /assets/img/thumbnails/4.png
+  alt: Three Phase Architecture
+  header: false
 ---
 After identifying the key components yesterday, I realized that trying to build the entire system at once would be a mistake.
 
