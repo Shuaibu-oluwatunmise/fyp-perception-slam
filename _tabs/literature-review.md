@@ -144,16 +144,7 @@ summary::-webkit-details-marker {
     </div>
 </div>
 
-<!-- [13] Perception > YOLOv13-Cone-Lite -->
-<div class="paper-item">
-    <span class="paper-citation">[13] C. Zhang et al., "YOLOv13-Cone-Lite: An Enhanced Algorithm for Traffic Cone Detection in Autonomous Formula Racing Cars," <em>Applied Sciences</em>, vol. 13, 2023.</span>
-    <div class="paper-links">
-        <a href="https://www.mdpi.com/2076-3417/13/10/6122" target="_blank"><i class="fas fa-external-link-alt"></i> Read Paper</a>
-    </div>
-    <div class="paper-relevance">
-        <strong>Relevance:</strong> A 2023 study benchmarking custom YOLO architectures specifically for FS cones. Useful for comparing our <strong>YOLOv8</strong> results against other custom models.
-    </div>
-</div>
+
 
 </div>
 </details>
@@ -253,27 +244,7 @@ summary::-webkit-details-marker {
     </div>
 </div>
 
-<!-- [14] FS > Full System SLAM -->
-<div class="paper-item">
-    <span class="paper-citation">[14] "Perception system. Simultaneous Localization and Mapping for a Formula Student Driverless Race Car," <em>ReadyTensor Projects</em>, 2024.</span>
-    <div class="paper-links">
-        <a href="https://app.readytensor.ai/publications/perception-system-simultaneous-localization-and-mapping-for-a-formula-student-driverless-race-car-6T7XkF3b" target="_blank"><i class="fas fa-external-link-alt"></i> Read Project</a>
-    </div>
-    <div class="paper-relevance">
-        <strong>Relevance:</strong> Validates our <strong>3-Phase Architecture</strong> (Detection → Localization → SLAM). Demonstrates a successful integration of YOLOv8 with a Visual SLAM framework.
-    </div>
-</div>
 
-<!-- [15] FS > Vision Clustering -->
-<div class="paper-item">
-    <span class="paper-citation">[15] "Innovative Cone Clustering and Path Planning for Autonomous Formula Student Race Cars Using Cameras," <em>MDPI Sensors</em>, 2024.</span>
-    <div class="paper-links">
-        <a href="https://www.mdpi.com/1424-8220/24/5/1645" target="_blank"><i class="fas fa-external-link-alt"></i> Read Paper</a>
-    </div>
-    <div class="paper-relevance">
-        <strong>Relevance:</strong> Discusses <strong>Vision-only Clustering</strong>. Important for justifying why we added LiDAR (to overcome the limitations of this exact camera-only approach).
-    </div>
-</div>
 
 </div>
 </details>
