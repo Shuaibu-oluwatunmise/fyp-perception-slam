@@ -65,4 +65,4 @@ By keeping the vehicle-specific mounting data in Node 4, we can take the exact s
 
 We now have cones publishing to `/cones` in the `base_link` frame. This is theoretically what the SLAM system needs to build a map. `Node 4` is the bridge that attempts to unify the system.
 
-Tomorrow, we verify everything in **Simulation**.
+Tomorrow, we start looking into the actual **IPG CarMaker** simulation software.
