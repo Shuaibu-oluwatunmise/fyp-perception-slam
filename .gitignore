@@ -25,24 +25,7 @@ package-lock.json
 # Misc
 _sass/vendors
 assets/js/dist
-Week_2-6_Project_Guide.pdf
-Week_2-6_Project_Guide.md
 temp_project_inspection/
-media.md
-node1a_explained.md
-yolov8n_analysis.md
-node2a_explained.md
-node3_explained.md
-node1b_explained.md
-node4_explained.md
-node2b_explained.md
-node3_fused_explained.md
-sensors.md
-ReferenceManual.md
-repo_overview.md
-Ethics and Risk assessment.pptx
-PDE3823 Project Risk Assessment Template.xlsx
-risk_assessment_rows.md
-carmaker_bridge_jetson.md
-FSAI_UsersGuide.md
-debug.md
+
+# Local reference files
+files/
