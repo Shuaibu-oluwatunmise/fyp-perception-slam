@@ -256,4 +256,4 @@ Approximately 8 coloured cone detections per frame at 10+ Hz, varying by track s
 
 The perception pipeline is essentially complete — what remains is refinement and clean up. Path planning and vehicle control are downstream components outside this project's scope.
 
-The next focus is **SLAM** — taking the cone detections the pipeline now produces and using them to build and localise against a map of the track. That's where the project goes from here.
+The next focus is **optimisation and testing** — seeing the limitations of the current system, evaluating how it performs at bends and corners, refining the detection parameters, and getting the 3D LiDAR clustering fully operational before introducing SLAM. That's where the project goes from here.

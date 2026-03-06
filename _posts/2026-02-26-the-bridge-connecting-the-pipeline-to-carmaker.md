@@ -114,11 +114,13 @@ At integration, it was detecting ~12.5 cones per frame. The pipeline abstraction
 
 ## Node 2b (DBSCAN): A Near-Complete Rethink
 
-The LiDAR detector needed significantly more attention. Not because the code was wrong — it was correct for what it was designed for. The problem is that **CarMaker's simulated LiDAR is a fundamentally different kind of sensor** from what the code was built around. Node 1b's mock data generated clusters of ~75 points per cone spread across a real Z range, with distinct height variation between cone returns and ground returns. CarMaker's LiDAR is a **horizontal single-plane scanner**. Everything falls within ~0.15m of Z variation across the entire scene.
+The LiDAR detector needed significantly more attention. Not because the code was wrong — it was correct for what it was designed for. The problem is that **CarMaker's simulated LiDAR produces a fundamentally different point cloud** from what the code was built around. Node 1b's mock data generated dense, clean clusters of ~75 points per cone. CarMaker's LiDAR produces a much sparser and noisier return profile across the scene.
+
+To get the pipeline connected and running robustly from end-to-end, **I made the deliberate decision to flatten the data and treat it as a 2D sensor for this initial integration.** Try to cluster the sparse Z-variation right now was adding noise and breaking detections. Getting a reliable 3D clustering implementation working on this specific sensor profile is planned as a future optimisation, but for now, 2D gives us the stable baseline we need.
 
 ### Why Almost Everything Had to Change
 
-Because all points share virtually the same Z value, a cone cluster and a wall segment look identical in height — essentially zero. This breaks almost every assumption the original detector was built on:
+Because the points are flattened to a single plane, a cone cluster and a wall segment look identical in height — essentially zero. This breaks almost every assumption the original detector was built on:
 
 #### Ground Removal: Fixed Threshold → Adaptive 10th-Percentile
 
@@ -126,7 +128,7 @@ Because all points share virtually the same Z value, a cone cluster and a wall s
 ```python
 mask = pts[:, 2] > 0.05   # Fixed height threshold
 ```
-With CarMaker's single-plane scanner, ground returns and cone returns share nearly the same Z — a fixed absolute threshold doesn't separate them reliably.
+With the data flattened to 2D, ground returns and cone returns share the same Z — a fixed absolute threshold doesn't separate them reliably.
 
 **After:**
 ```python
@@ -144,11 +146,11 @@ With a single-plane scanner, the ground Z shifts as the car pitches and rolls. T
 xy = pts[:, :2]
 labels = DBSCAN(eps=self.eps, min_samples=self.min_points).fit_predict(xy)
 ```
-Since all points share nearly the same Z, including Z in the clustering distance metric adds noise without information. XY-only clustering is cleaner and more numerically stable.
+Since all points are projected to the ground plane, including Z in the clustering distance metric adds noise without information. XY-only clustering is cleaner and more numerically stable for this initial baseline.
 
 #### min_points: Significantly Reduced
 
-With a 3D scanner, multiple scan lines hit a cone from different vertical angles, guaranteeing a minimum number of returns on any visible object. A single horizontal scan line doesn't have that guarantee — a cone at longer range intersects a thin arc of the beam, and the return count drops significantly with distance.
+With the mock data, multiple scan lines hit a cone from different vertical angles, guaranteeing a high number of tightly-packed returns. CarMaker's sparser point cloud doesn't have that guarantee — especially at longer ranges where the return count drops significantly.
 
 The original `min_points=10` was rejecting valid distant cones that had fewer returns. Reducing it significantly ensures those cones are detected too — at the cost of accepting more noise, which the footprint size check downstream handles.
 
