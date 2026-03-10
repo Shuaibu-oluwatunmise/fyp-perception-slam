@@ -239,20 +239,9 @@ Getting camera-only mode to a point where it produces positions reliable enough 
 
 After both rewrites, new calibration files, and the launch system consolidation:
 
-```yaml
-# ros2 topic echo /cones
-cones:
-  - position: {x: 4.21, y: 1.83, z: 0.0}
-    class_name: "blue_cone"
-    confidence: 0.91
-    source: "fused"
-  - position: {x: 4.18, y: -1.74, z: 0.0}
-    class_name: "yellow_cone"
-    confidence: 0.88
-    source: "fused"
-```
+![ros2 topic echo /cones output showing fused blue and yellow cone detections](/assets/img/blog/2026-02-27/conestopicecho.png)
 
-Approximately 8 coloured cone detections per frame at 10+ Hz, varying by track scenario. LiDAR XY positions, YOLO colour, Hungarian-matched, published in the vehicle frame.
+Coloured cone detections are produced at 10+ Hz, varying by track scenario. LiDAR XY positions, YOLO colour, Hungarian-matched, published in the vehicle frame.
 
 The perception pipeline is essentially complete — what remains is refinement and clean up. Path planning and vehicle control are downstream components outside this project's scope.
 
