@@ -9,7 +9,7 @@ image:
   alt: Moving to Ubuntu 22.04
   header: false
 ---
-After two days of fighting with custom Python bridges and fighting the "LiDAR Wall," I had a realization today that changed the entire direction of the project. Sometimes, the most efficient way forward isn't to build a better bridge, but to move to a better neighborhood.
+After two days of fighting with custom Python bridges and fighting the "LiDAR Wall," I had a realization today that changed the entire direction of the project. Sometimes, the most efficient way forward isn't to build a better bridge, but to move to a better neighborhood *(was feeling a bit poetic writing this line xD)*.
 
 ## Discovery in the `doc` Folder
 

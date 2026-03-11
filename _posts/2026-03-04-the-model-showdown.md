@@ -32,7 +32,7 @@ Then ran a comparison against the original YOLOv8n.
 
 YOLO11n was a dead end — essentially identical to YOLOv8n. The step up to YOLO26 architecture is where things changed. The nano variant gains about 5 percentage points. The small variant gains nearly 10.
 
-The number that matters most for this project is recall — the percentage of actual cones the model detects. From the training curves, YOLOv8n's recall sits at approximately 71.6%. YOLO26s comes in at ~80%+. That improvement is directly addressing the long-range detection weakness flagged in the [Week 3 training analysis](/fyp-perception-slam/techposts/technical-deep-dive-yolo-model-comparison/).
+The number that matters most for this project is recall — the percentage of actual cones the model detects. From the training curves, YOLOv8n's recall sits at approximately 71.6%. YOLO26s comes in at ~80%+. That improvement is directly addressing the long-range detection weakness flagged in the [Week 3 training post](/fyp-perception-slam/posts/training-yolo-cone-detector/).
 
 ## Seeing It in Action
 
@@ -79,5 +79,11 @@ The full architectural breakdown, training curves for all four models, and per-c
 ## Decision
 
 YOLO26s replaces YOLOv8n as the production camera detector going forward. The mAP gain, the recall improvement, and the NMS-free architecture all point in the same direction. This is the model going into the fusion engine.
+
+**[Download Trained Model — YOLO26s (best.pt)](/fyp-perception-slam/assets/docs/blog/2026-03-04/best.pt)**  
+_YOLO26s weights trained on the FSOCO dataset for Formula Student cone detection. mAP@50: 88.0%_
+
+**[Training Metrics (results.csv)](/fyp-perception-slam/assets/docs/blog/2026-03-04/results.csv)**  
+_Per-epoch loss, mAP, precision, and recall data_
 
 Tomorrow, I'll be running the new model through more stress tests — different scenarios, edge cases, see what else surfaces before touching the fusion engine.
