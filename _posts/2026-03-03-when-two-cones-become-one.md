@@ -10,9 +10,11 @@ image:
   header: false
 ---
 
-Yesterday's 3D volumetric filter cleaned up the bulk of the false detections. Today, a new problem.
+With the LiDAR filters from yesterday in place, I started running through different track configurations to stress-test the system. In both the TrackDrive and Acceleration scenarios, there are cones placed close together. I wanted to see how the detector handled them.
 
-Monday's fix was geometric — measure the bounding box, reject anything that doesn't match a cone's physical dimensions. But the filter assumes each cluster contains exactly one cone. When two cones are placed close together, that assumption breaks.
+It didn't.
+
+Instead of two detections, the system produced one — planted right between the two physical cones. The raw LiDAR data was fine. The point clouds clearly showed two distinct objects. The problem was in the clustering step.
 
 ## The Problem: DBSCAN Doesn't Know Where One Cone Ends
 
@@ -63,4 +65,4 @@ K=2 also keeps it computationally cheap. No model selection, no silhouette scori
 ![Full track scene with all cones individually detected](/assets/img/blog/2026-03-03/proof.png)
 _Cones in close proximity, all detected as separate individual objects — including the cluster in the upper right. No merging, no ghost centroids._
 
-The LiDAR detector now handles close-proximity cones correctly — right count, right position. Tomorrow: more stress-testing to see what else the system exposes.
+The LiDAR detector now handles close-proximity cones correctly — right count, right position. Tomorrow, I finally test YOLO26. Back in the Week 3 training report, I flagged long-range detection as YOLOv8n's main weakness and said I'd come back to it. Time to see if YOLO26's architecture changes actually make a difference.
