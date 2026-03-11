@@ -1,5 +1,5 @@
 ---
-title: "Week 7, Tuesday: When Two Cones Become One"
+title: "When Two Cones Become One"
 date: 2026-03-03 18:00:00 +0000
 categories: [Week 7, Phase 4]
 tags: [ros2, lidar, dbscan, k-means, clustering, perception]

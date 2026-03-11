@@ -1,5 +1,5 @@
 ---
-title: "Week 7: The Perception Overhaul"
+title: "The Perception Overhaul"
 date: 2026-03-02 18:00:00 +0000
 categories: [Week 7, Phase 4]
 tags: [ros2, lidar, point-cloud, dbscan, perception, filtering, movienx, rviz]
