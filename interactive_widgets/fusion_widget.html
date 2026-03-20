@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fusion Projection Widget</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#0d0d1a;font-family:'JetBrains Mono',monospace;color:#ccccdd}
+body{display:flex;flex-direction:column;padding:12px;gap:8px}
+.header{display:flex;justify-content:space-between;align-items:baseline;flex-shrink:0}
+.header h3{font-size:.95em;color:#fff;font-weight:700}
+.header span{font-size:.7em;color:#7777aa}
+.canvases{display:flex;gap:10px;flex:1;min-height:0}
+.cv-wrap{flex:1;display:flex;flex-direction:column;gap:4px;min-height:0}
+.cv-label{font-size:.68em;color:#7777aa;text-align:center;flex-shrink:0}
+canvas{border-radius:8px;border:1px solid #2a2a44;background:#080812;width:100%;flex:1;display:block;min-height:0}
+.controls{flex-shrink:0;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start}
+.card{background:#1a1a35;border:1px solid #2a2a44;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;flex:1;min-width:180px}
+.card h4{font-size:.65em;color:#7777aa;text-transform:uppercase;letter-spacing:.07em}
+.sg{display:flex;flex-direction:column;gap:3px}
+.sh{display:flex;justify-content:space-between;font-size:.7em;color:#7777aa}
+input[type=range]{width:100%;appearance:none;height:4px;border-radius:2px;background:#252545;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:12px;height:12px;border-radius:50%;cursor:pointer;border:2px solid #fff}
+.outcomes{display:flex;gap:8px;flex-wrap:wrap;flex:1;min-width:220px}
+.outcome{flex:1;min-width:80px;border-radius:8px;padding:8px 10px;font-size:.68em;border:1px solid;transition:all .25s}
+.outcome .count{font-size:1.6em;font-weight:700;line-height:1}
+.outcome .lbl{font-size:.8em;margin-top:2px;line-height:1.3}
+.fused{border-color:#1D9E75;background:rgba(29,158,117,.08)}.fused .count{color:#1D9E75}
+.lidar{border-color:#EF9F27;background:rgba(239,159,39,.08)}.lidar .count{color:#EF9F27}
+.drop{border-color:#E24B4A;background:rgba(226,75,74,.08)}.drop .count{color:#E24B4A}
+</style>
+</head>
+<body>
+<div class="header">
+  <h3>Widget — LiDAR→Image Projection &amp; Fusion</h3>
+  <span>Adjust cone position, watch the projection land</span>
+</div>
+
+<div class="canvases">
+  <div class="cv-wrap">
+    <div class="cv-label">LiDAR Frame — Top-Down View</div>
+    <canvas id="cTop"></canvas>
+  </div>
+  <div class="cv-wrap">
+    <div class="cv-label">Camera Frame — Projected Image</div>
+    <canvas id="cCam"></canvas>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="card">
+    <h4>Cone 1 (orange)</h4>
+    <div class="sg">
+      <div class="sh"><span style="color:#EF9F27">X — lateral (left/right)</span><span id="v1x" style="color:#EF9F27">−1.5 m</span></div>
+      <input type="range" id="s1x" min="-6" max="6" step="0.25" value="-1.5" style="--col:#EF9F27">
+    </div>
+    <div class="sg">
+      <div class="sh"><span style="color:#EF9F27">Z — depth (forward)</span><span id="v1z" style="color:#EF9F27">8.0 m</span></div>
+      <input type="range" id="s1z" min="2" max="20" step="0.5" value="8" style="--col:#EF9F27">
+    </div>
+  </div>
+  <div class="card">
+    <h4>Cone 2 (purple)</h4>
+    <div class="sg">
+      <div class="sh"><span style="color:#7F77DD">X — lateral (left/right)</span><span id="v2x" style="color:#7F77DD">+1.5 m</span></div>
+      <input type="range" id="s2x" min="-6" max="6" step="0.25" value="1.5" style="--col:#7F77DD">
+    </div>
+    <div class="sg">
+      <div class="sh"><span style="color:#7F77DD">Z — depth (forward)</span><span id="v2z" style="color:#7F77DD">8.0 m</span></div>
+      <input type="range" id="s2z" min="2" max="20" step="0.5" value="8" style="--col:#7F77DD">
+    </div>
+  </div>
+  <div class="card">
+    <h4>Match Tolerance</h4>
+    <div class="sg">
+      <div class="sh"><span style="color:#7777aa">BBox margin (px)</span><span id="vM" style="color:#7F77DD">10 px</span></div>
+      <input type="range" id="sM" min="0" max="60" step="2" value="10">
+    </div>
+    <div style="font-size:.65em;color:#7777aa;margin-top:4px;line-height:1.5">
+      Camera optical frame (Obj_F):<br>
+      <span style="color:#1D9E75">u = fx·(X / Z) + cx</span><br>
+      <span style="color:#1D9E75">v = fy·(Y / Z) + cy</span><br>
+      <span style="color:#444466">X = lateral · Z = depth · Y ≈ fixed<br>(cone near ground → constant height offset)</span>
+    </div>
+  </div>
+  <div class="outcomes">
+    <div class="outcome fused"><div class="count" id="oF">0</div><div class="lbl">Fused ✓<br>pos+colour</div></div>
+    <div class="outcome lidar"><div class="count" id="oL">0</div><div class="lbl">LiDAR-only<br>unknown · 0.9</div></div>
+    <div class="outcome drop"><div class="count" id="oD">0</div><div class="lbl">Dropped ✗<br>no LiDAR</div></div>
+  </div>
+</div>
+
+<script>
+const cTop=document.getElementById('cTop'), ctxT=cTop.getContext('2d');
+const cCam=document.getElementById('cCam'), ctxC=cCam.getContext('2d');
+
+// Camera intrinsics (CarMaker defaults)
+const FX=320, FY=320, CX=320, CY=240;
+const IMG_W=640, IMG_H=480;
+
+// YOLO bboxes — perspective sizing: outer cones closer → bigger, inner cones farther → smaller
+const YOLO=[
+  {cx:110, cy:265, w:54, h:52, label:'cone?'},   // outer left  — closest, largest
+  {cx:250, cy:262, w:38, h:36, label:'cone?'},   // inner left  — farther, smaller
+  {cx:390, cy:262, w:38, h:36, label:'cone?'},   // inner right — farther, smaller
+  {cx:530, cy:265, w:54, h:52, label:'cone?'},   // outer right — closest, largest
+];
+
+// Cone colours
+const C1_COL='#EF9F27', C2_COL='#7F77DD';
+
+function resize(){
+  cTop.width=cTop.offsetWidth||350; cTop.height=cTop.offsetHeight||250;
+  cCam.width=cCam.offsetWidth||350; cCam.height=cCam.offsetHeight||250;
+}
+
+// Widget coordinate convention:
+//   X = lateral (left/right across track, neg=left)
+//   Y = height above ground (fixed ~0.2m for cone top)
+//   Z = depth forward (distance ahead)
+// Camera optical: u = fx*(X/Z)+cx,  v = fy*(-Y/Z)+cy
+function project(cx,cz){ return {u:FX*(cx/cz)+CX, v:FY*(-0.2/cz)+CY}; }
+
+// Top-down view: horizontal = X (lateral), vertical = Z (depth up the canvas)
+// X: -7..7, Z: 0..20
+function w2t(cx,cz){
+  const W=cTop.width, H=cTop.height;
+  return {px:(cx+7)/14*W, py:(1-cz/22)*H*0.92+H*0.04};
+}
+
+// Scale world-metres to camera-image pixels, then to canvas display pixels
+function imgPxToCanvas(iu,iv){
+  const W=cCam.width, H=cCam.height;
+  return {px:(iu/IMG_W)*W, py:(iv/IMG_H)*H};
+}
+
+function inBbox(u,v,bbox,margin){
+  return u>=bbox.cx-bbox.w/2-margin && u<=bbox.cx+bbox.w/2+margin &&
+         v>=bbox.cy-bbox.h/2-margin && v<=bbox.cy+bbox.h/2+margin;
+}
+
+function draw(){
+  resize();
+  const margin=parseInt(document.getElementById('sM').value);
+  // Each cone: cx=lateral(X), cz=depth(Z), Y=0.2m fixed
+  const c1={cx:parseFloat(document.getElementById('s1x').value),
+             cz:parseFloat(document.getElementById('s1z').value)};
+  const c2={cx:parseFloat(document.getElementById('s2x').value),
+             cz:parseFloat(document.getElementById('s2z').value)};
+  const cones=[{cone:c1,col:C1_COL},{cone:c2,col:C2_COL}];
+
+  // ── TOP-DOWN VIEW ──────────────────────────────────────────────
+  const TW=cTop.width, TH=cTop.height;
+  ctxT.fillStyle='#080812'; ctxT.fillRect(0,0,TW,TH);
+  ctxT.strokeStyle='#111128'; ctxT.lineWidth=1; ctxT.beginPath();
+  for(let x=-6;x<=6;x+=3){const{px}=w2t(x,0);ctxT.moveTo(px,0);ctxT.lineTo(px,TH);}
+  for(let z=0;z<=20;z+=4){const{py}=w2t(0,z);ctxT.moveTo(0,py);ctxT.lineTo(TW,py);}
+  ctxT.stroke();
+
+  // LiDAR origin (car, bottom-centre)
+  const{px:ox,py:oy}=w2t(0,0);
+  ctxT.fillStyle='#7F77DD';ctxT.beginPath();ctxT.arc(ox,oy,7,0,Math.PI*2);ctxT.fill();
+  ctxT.fillStyle='#7F77DD';ctxT.font='9px JetBrains Mono';ctxT.textAlign='center';
+  ctxT.fillText('LiDAR',ox,oy+18);
+
+  // Camera FOV cone (±atan(CX/FX) ≈ 45° half-angle)
+  ctxT.strokeStyle='#7F77DD22';ctxT.lineWidth=1;ctxT.setLineDash([4,6]);
+  const fovHalfX=Math.atan(CX/FX);
+  const maxZ=21;
+  const{px:f1x,py:f1y}=w2t(-maxZ*Math.tan(fovHalfX),maxZ);
+  const{px:f2x,py:f2y}=w2t( maxZ*Math.tan(fovHalfX),maxZ);
+  ctxT.beginPath();ctxT.moveTo(ox,oy);ctxT.lineTo(f1x,f1y);
+  ctxT.moveTo(ox,oy);ctxT.lineTo(f2x,f2y);ctxT.stroke();ctxT.setLineDash([]);
+
+  // Cones + bearing lines
+  for(const{cone,col} of cones){
+    const{px,py}=w2t(cone.cx,cone.cz);
+    ctxT.strokeStyle=col+'44';ctxT.lineWidth=1;ctxT.setLineDash([3,5]);
+    ctxT.beginPath();ctxT.moveTo(ox,oy);ctxT.lineTo(px,py);ctxT.stroke();ctxT.setLineDash([]);
+    ctxT.fillStyle=col;ctxT.beginPath();ctxT.arc(px,py,7,0,Math.PI*2);ctxT.fill();
+    ctxT.fillStyle=col;ctxT.font='9px JetBrains Mono';ctxT.textAlign='center';
+    ctxT.fillText(`Z=${cone.cz.toFixed(0)}m`,px,py-11);
+  }
+
+  // Axis labels
+  ctxT.fillStyle='#333355';ctxT.font='8px JetBrains Mono';ctxT.textAlign='center';
+  for(let z=0;z<=20;z+=4){const{px,py}=w2t(-6.2,z);ctxT.fillText(z+'m',px+10,py+3);}
+  ctxT.fillStyle='#333355';ctxT.font='8px JetBrains Mono';
+  ctxT.fillText('← X lateral →',TW/2,TH-3);
+  ctxT.save();ctxT.translate(10,TH*.35);ctxT.rotate(-Math.PI/2);
+  ctxT.fillText('Z depth (forward)',0,0);ctxT.restore();
+
+  // ── CAMERA IMAGE VIEW ──────────────────────────────────────────
+  const CW=cCam.width, CH=cCam.height;
+  // Background gradient (fake camera image)
+  const grad=ctxC.createLinearGradient(0,0,0,CH);
+  grad.addColorStop(0,'#09091c');grad.addColorStop(.45,'#101020');grad.addColorStop(.46,'#0d1210');grad.addColorStop(1,'#080d08');
+  ctxC.fillStyle=grad;ctxC.fillRect(0,0,CW,CH);
+  // Scanline texture
+  for(let y=0;y<CH;y+=3){ctxC.fillStyle='rgba(0,0,0,0.1)';ctxC.fillRect(0,y,CW,1);}
+  // Horizon line
+  ctxC.strokeStyle='#1a1a2e';ctxC.lineWidth=1;
+  ctxC.beginPath();ctxC.moveTo(0,CH*.46);ctxC.lineTo(CW,CH*.46);ctxC.stroke();
+
+  // Project each cone: u = fx*(X/Z)+cx, v = fy*(-Y/Z)+cy
+  const projections=[];
+  for(const{cone,col} of cones){
+    if(cone.cz>0){
+      const{u,v}=project(cone.cx,cone.cz);
+      projections.push({u,v,col});
+    }
+  }
+
+  // YOLO boxes + match check
+  const matchedYolo=new Set();
+  const matchedProj=new Set();
+  for(let pi=0;pi<projections.length;pi++){
+    const{u,v}=projections[pi];
+    for(let yi=0;yi<YOLO.length;yi++){
+      if(matchedYolo.has(yi))continue;
+      if(inBbox(u,v,YOLO[yi],margin)){
+        matchedYolo.add(yi);matchedProj.add(pi);break;
+      }
+    }
+  }
+
+  // Draw YOLO boxes
+  for(let yi=0;yi<YOLO.length;yi++){
+    const b=YOLO[yi];
+    const matched=matchedYolo.has(yi);
+    const bCol=matched?'#1D9E75':'#E24B4A';
+    const{px:bx,py:by}=imgPxToCanvas(b.cx,b.cy);
+    const bw2=(b.w/IMG_W*CW)/2, bh2=(b.h/IMG_H*CH)/2;
+    const mg=(margin/IMG_W)*CW;
+    // margin dashed
+    ctxC.strokeStyle='#7F77DD33';ctxC.lineWidth=1;ctxC.setLineDash([3,4]);
+    ctxC.strokeRect(bx-bw2-mg,by-bh2-mg,(bw2+mg)*2,(bh2+mg)*2);
+    ctxC.setLineDash([]);
+    // bbox fill + border
+    ctxC.fillStyle=matched?'rgba(29,158,117,.1)':'rgba(226,75,74,.08)';
+    ctxC.fillRect(bx-bw2,by-bh2,bw2*2,bh2*2);
+    ctxC.strokeStyle=bCol;ctxC.lineWidth=2;
+    ctxC.strokeRect(bx-bw2,by-bh2,bw2*2,bh2*2);
+    // label
+    ctxC.fillStyle=bCol;ctxC.font='bold 9px JetBrains Mono';ctxC.textAlign='center';
+    ctxC.fillText(matched?'Fused ✓':'Dropped ✗',bx,by-bh2-5);
+    ctxC.fillStyle=bCol+'88';ctxC.font='8px JetBrains Mono';
+    ctxC.fillText(b.label,bx,by+bh2-4);
+  }
+
+  // Draw projected dots
+  for(let pi=0;pi<projections.length;pi++){
+    const{u,v,col}=projections[pi];
+    const{px,py}=imgPxToCanvas(u,v);
+    const isMatched=matchedProj.has(pi);
+    const dotCol=isMatched?'#1D9E75':col;
+    const r=8;
+    // glow
+    const grd=ctxC.createRadialGradient(px,py,1,px,py,r*2);
+    grd.addColorStop(0,dotCol+'66');grd.addColorStop(1,'transparent');
+    ctxC.fillStyle=grd;ctxC.beginPath();ctxC.arc(px,py,r*2,0,Math.PI*2);ctxC.fill();
+    // crosshair
+    ctxC.strokeStyle=dotCol;ctxC.lineWidth=2;
+    ctxC.beginPath();ctxC.moveTo(px-r,py);ctxC.lineTo(px+r,py);
+    ctxC.moveTo(px,py-r);ctxC.lineTo(px,py+r);ctxC.stroke();
+    ctxC.fillStyle=dotCol;ctxC.beginPath();ctxC.arc(px,py,3,0,Math.PI*2);ctxC.fill();
+    // outcome label
+    ctxC.fillStyle=dotCol;ctxC.font='bold 9px JetBrains Mono';ctxC.textAlign='left';
+    ctxC.fillText(isMatched?'in box →fused':'outside →LiDAR-only',px+r+3,py+3);
+  }
+
+  // ── Outcome counters ───────────────────────────────────────────
+  const nF=matchedProj.size;
+  const nL=projections.length-nF;
+  const nD=YOLO.length-matchedYolo.size;
+  document.getElementById('oF').textContent=nF;
+  document.getElementById('oL').textContent=nL;
+  document.getElementById('oD').textContent=nD;
+  document.getElementById('vM').textContent=margin+' px';
+}
+
+// ── Slider listeners ─────────────────────────────────────────────
+['s1x','s1z','s2x','s2z','sM'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',()=>{
+    const x1=parseFloat(document.getElementById('s1x').value);
+    const z1=parseFloat(document.getElementById('s1z').value);
+    const x2=parseFloat(document.getElementById('s2x').value);
+    const z2=parseFloat(document.getElementById('s2z').value);
+    document.getElementById('v1x').textContent=(x1>=0?'+':'')+x1.toFixed(2)+' m';
+    document.getElementById('v1z').textContent=z1.toFixed(1)+' m';
+    document.getElementById('v2x').textContent=(x2>=0?'+':'')+x2.toFixed(2)+' m';
+    document.getElementById('v2z').textContent=z2.toFixed(1)+' m';
+    draw();
+  });
+});
+
+// ── Thumb colours ────────────────────────────────────────────────
+document.querySelectorAll('input[type=range]').forEach(el=>{
+  const col=el.style.getPropertyValue('--col')||'#7F77DD';
+  el.style.setProperty('accent-color',col);
+});
+
+window.addEventListener('resize',draw);
+setTimeout(draw,60);
+</script>
+</body></html>

@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DBSCAN Widget</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;overflow:hidden;background:#0d0d1a;font-family:'JetBrains Mono',monospace;color:#ccccdd}
+body{display:flex;flex-direction:column;padding:12px;gap:8px}
+.header{display:flex;justify-content:space-between;align-items:baseline;flex-shrink:0}
+.header h3{font-size:.95em;color:#fff;font-weight:700}.header span{font-size:.7em;color:#7777aa}
+#c{border-radius:10px;border:1px solid #2a2a44;background:#080812;width:100%;flex:1;display:block;min-height:0;cursor:crosshair}
+.controls{flex-shrink:0;display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.card{background:#1a1a35;border:1px solid #2a2a44;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;flex:1;min-width:200px}
+.card h4{font-size:.65em;color:#7777aa;text-transform:uppercase;letter-spacing:.07em}
+.row{display:flex;gap:12px;align-items:center}
+.sg{display:flex;flex-direction:column;gap:3px;flex:1}
+.sh{display:flex;justify-content:space-between;font-size:.7em;color:#7777aa}
+input[type=range]{width:100%;appearance:none;height:4px;border-radius:2px;background:#252545;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:12px;height:12px;border-radius:50%;background:#7F77DD;cursor:pointer;border:2px solid #fff}
+button{background:#1a1a40;border:1px solid #333355;border-radius:6px;color:#7777aa;font-family:inherit;font-size:.7em;padding:6px 12px;cursor:pointer;white-space:nowrap}
+button:hover{color:#ccccdd;border-color:#555577}
+.stats{display:flex;gap:8px;flex-wrap:wrap}
+.stat{background:#0d0d1a;border-radius:6px;padding:6px 10px;font-size:.68em;flex:1;min-width:80px}
+.stat .lbl{color:#7777aa}.stat .val{margin-top:1px}
+.instructions{background:rgba(127,119,221,0.07);border:1px solid rgba(127,119,221,0.18);border-radius:8px;padding:8px 10px;font-size:.68em;line-height:1.5;color:#ccccdd;flex:1.5;min-width:220px}
+</style>
+</head>
+<body>
+<div class="header">
+  <h3>Widget 3 — DBSCAN: When Does a Cluster Become a Cone?</h3>
+  <span>Click canvas to place returns</span>
+</div>
+<canvas id="c"></canvas>
+<div class="controls">
+  <div class="instructions">
+    <strong style="color:#7F77DD">Click</strong> on the canvas to place LiDAR returns — each click adds a small scatter of points (like a beam sweep hitting a cone). A cone is only <strong style="color:#1D9E75">detected ▲</strong> once point density meets <strong>min_samples</strong>. Try increasing it — detected cones vanish!
+  </div>
+  <div class="card">
+    <h4>DBSCAN Parameters</h4>
+    <div class="row">
+      <div class="sg">
+        <div class="sh"><span style="color:#7F77DD">ε radius</span><span id="vEps" style="color:#7F77DD">0.50 m</span></div>
+        <input type="range" id="sEps" min="0.1" max="1.5" step="0.05" value="0.5">
+      </div>
+      <div class="sg">
+        <div class="sh"><span style="color:#EF9F27">min_samples</span><span id="vMin" style="color:#EF9F27">4</span></div>
+        <input type="range" id="sMin" min="2" max="12" step="1" value="4">
+      </div>
+      <button id="btnReset">↺ Clear</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="lbl">Pts placed</div><div class="val" id="sPts" style="color:#ccccdd">0</div></div>
+      <div class="stat"><div class="lbl">Clusters</div><div class="val" id="sCl" style="color:#7F77DD">0</div></div>
+      <div class="stat"><div class="lbl">Cones ▲</div><div class="val" id="sCones" style="color:#1D9E75">0</div></div>
+      <div class="stat"><div class="lbl">Need per cone</div><div class="val" id="sNeed" style="color:#EF9F27">4 pts</div></div>
+    </div>
+  </div>
+</div>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+let userPts=[];
+function mul32(s){let _s=s;return()=>{_s|=0;_s=_s+0x6D2B79F5|0;let t=Math.imul(_s^_s>>>15,1|_s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const rng=mul32(21);
+const NOISE=Array.from({length:20},()=>({x:-1+rng()*14,y:-3.5+rng()*7,noise:true}));
+function resize(){cv.width=cv.offsetWidth||600;cv.height=cv.offsetHeight||280;}
+function w2c(x,y){const W=cv.width,H=cv.height;return{px:(x+1)/15*W,py:(1-(y+4)/9)*H};}
+function c2w(px,py){const W=cv.width,H=cv.height;return{x:px/W*15-1,y:(1-py/H)*9-4};}
+function wDist(d){return d/15*cv.width;}
+function dbscan(pts,eps,minPts){
+  const n=pts.length;const lbl=new Array(n).fill(-1);let C=-1;
+  const vis=new Array(n).fill(false);
+  const nb=i=>{const r=[];for(let j=0;j<n;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y;if(dx*dx+dy*dy<=eps*eps)r.push(j);}return r;};
+  for(let i=0;i<n;i++){if(vis[i])continue;vis[i]=true;const q=nb(i);if(q.length<minPts)continue;C++;lbl[i]=C;const stk=[...q];while(stk.length){const j=stk.pop();if(!vis[j]){vis[j]=true;const q2=nb(j);if(q2.length>=minPts)stk.push(...q2);}if(lbl[j]===-1)lbl[j]=C;}}
+  return{lbl,nC:C+1};
+}
+const COLS=['#1D9E75','#7F77DD','#3B8BD4','#00A896','#EF9F27','#ff9ef7'];
+function draw(){
+  resize();const W=cv.width,H=cv.height;
+  ctx.fillStyle='#080812';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#131328';ctx.lineWidth=1;ctx.beginPath();
+  for(const x of[0,2,4,6,8,10,12]){const{px}=w2c(x,0);ctx.moveTo(px,0);ctx.lineTo(px,H);}
+  for(const y of[-3,-1,1,3]){const{py}=w2c(0,y);ctx.moveTo(0,py);ctx.lineTo(W,py);}
+  ctx.stroke();
+  const eps=parseFloat(document.getElementById('sEps').value);
+  const minPts=parseInt(document.getElementById('sMin').value);
+  const allPts=[...userPts,...NOISE];
+  const{lbl,nC}=dbscan(allPts,eps,minPts);
+  // noise backdrop
+  for(let i=userPts.length;i<allPts.length;i++){const{px,py}=w2c(allPts[i].x,allPts[i].y);ctx.fillStyle='#1e1e38';ctx.beginPath();ctx.arc(px,py,2,0,Math.PI*2);ctx.fill();}
+  // eps circles
+  const drawn=new Set();
+  for(let i=0;i<userPts.length;i++){if(lbl[i]<0||drawn.has(lbl[i]))continue;drawn.add(lbl[i]);const{px,py}=w2c(userPts[i].x,userPts[i].y);const sr=wDist(eps);ctx.strokeStyle=COLS[lbl[i]%COLS.length]+'33';ctx.lineWidth=1;ctx.setLineDash([3,4]);ctx.beginPath();ctx.arc(px,py,sr,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);}
+  // user pts
+  for(let i=0;i<userPts.length;i++){const{px,py}=w2c(userPts[i].x,userPts[i].y);const col=lbl[i]>=0?COLS[lbl[i]%COLS.length]:'#444455';ctx.fillStyle=col;ctx.beginPath();ctx.arc(px,py,4,0,Math.PI*2);ctx.fill();}
+  // clusters
+  let validCones=0;
+  for(let ci=0;ci<nC;ci++){
+    const clPts=userPts.filter((_,i)=>lbl[i]===ci);if(!clPts.length)continue;
+    const mx=clPts.reduce((s,p)=>s+p.x,0)/clPts.length;
+    const my=clPts.reduce((s,p)=>s+p.y,0)/clPts.length;
+    const col=COLS[ci%COLS.length];const{px,py}=w2c(mx,my);
+    ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(px-5,py-5);ctx.lineTo(px+5,py+5);ctx.moveTo(px+5,py-5);ctx.lineTo(px-5,py+5);ctx.stroke();
+    if(clPts.length>=minPts){
+      validCones++;
+      ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.setLineDash([3,3]);ctx.beginPath();ctx.arc(px,py,15,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+      ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(px,py-13);ctx.lineTo(px-8,py+5);ctx.lineTo(px+8,py+5);ctx.fill();
+      ctx.fillStyle=col;ctx.font='bold 10px JetBrains Mono';ctx.textAlign='center';ctx.fillText('Detected!',px,py-18);
+    } else {
+      const need=minPts-clPts.length;
+      ctx.fillStyle='#E24B4A';ctx.font='9px JetBrains Mono';ctx.textAlign='center';ctx.fillText(`+${need} more`,px,py-14);
+    }
+  }
+  // hint
+  ctx.fillStyle='#2a2a50';ctx.font='9px JetBrains Mono';ctx.textAlign='center';
+  ctx.fillText('Click to place LiDAR returns  •  dashed circle = ε neighbourhood',W/2,H-5);
+  document.getElementById('sPts').textContent=userPts.length;
+  document.getElementById('sCl').textContent=nC;
+  document.getElementById('sCones').textContent=validCones;
+  document.getElementById('sNeed').textContent=minPts+' pts';
+  document.getElementById('vEps').textContent=eps.toFixed(2)+' m';
+  document.getElementById('vMin').textContent=minPts;
+}
+cv.addEventListener('click',e=>{
+  const rect=cv.getBoundingClientRect();const px=(e.clientX-rect.left)*(cv.width/rect.width);const py=(e.clientY-rect.top)*(cv.height/rect.height);
+  const{x,y}=c2w(px,py);const r=mul32(Date.now()|0);
+  const n=3+Math.floor(r()*3);
+  for(let i=0;i<n;i++)userPts.push({x:x+(r()-.5)*.18,y:y+(r()-.5)*.18});
+  draw();
+});
+document.getElementById('btnReset').addEventListener('click',()=>{userPts=[];draw();});
+document.getElementById('sEps').addEventListener('input',draw);
+document.getElementById('sMin').addEventListener('input',draw);
+window.addEventListener('resize',draw);
+setTimeout(draw,60);
+</script>
+</body></html>
