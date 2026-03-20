@@ -5,7 +5,7 @@ categories: [Week 8, Technical Deep Dive]
 tags: [perception, fusion, lidar, camera, tf2, hungarian, interactive]
 pin: false
 image:
-  path: /assets/img/thumbnails/34.png
+  path: /assets/img/thumbnails/35.png
   alt: Sensor Fusion
   header: false
 ---
@@ -57,7 +57,7 @@ Every cone ends up in exactly one of three states:
 
 Camera-only detections are dropped entirely. If the camera sees something but LiDAR doesn't confirm it, we don't publish it — no depth source we trust well enough.
 
-The widget below makes this concrete. The **left panel** is a top-down view of the LiDAR frame — you can see two cone positions and the camera's field of view. The **right panel** is the camera image with two YOLO boxes already present. Use the sliders to adjust each cone's depth (X, how far forward) and lateral position (Y, how far left or right). Watch the projected crosshair move across the camera image in real time — and see how the fusion outcome changes the moment it enters or exits a bounding box:
+The widget below makes this concrete. The **left panel** is a top-down view of the LiDAR frame — you can see two cone positions and the camera's field of view. The **right panel** is the camera image with two YOLO boxes already present. Use the sliders to adjust each cone's lateral position (X, how far left or right) and depth (Z, how far forward). Watch the projected crosshair move across the camera image in real time — and see how the fusion outcome changes the moment it enters or exits a bounding box:
 
 <iframe src="{{ site.baseurl }}/interactive_widgets/fusion_widget.html" width="100%" height="620px" scrolling="no" frameborder="0" style="border:none; border-radius:12px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"></iframe>
 
@@ -66,5 +66,11 @@ One practical wrinkle: our CarMaker camera runs at ~3.3 Hz and the LiDAR at ~1 H
 ## The Output
 
 Every fused or LiDAR-only cone is published on `/cones` as a `Cone3D` message with `(x, y, z)` in the `Fr1A` vehicle frame. The navigation stack reads this topic and sees: here are the cones, in my own coordinate frame, ready to plan around.
+
+### The Real-World Application
+
+This is essentially how we do this:
+
+![Image-Space Matching Architecture](/assets/img/blog/2026-03-13/debug.png)
 
 That's the full pipeline — from a spinning laser and a colour camera, down to a clean list of 3D positions. Next week moves into formal evaluation: does it actually work at the numbers the FSAI objective requires?

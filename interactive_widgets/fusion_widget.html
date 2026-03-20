@@ -5,303 +5,328 @@
 <title>Fusion Projection Widget</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
+:root{
+  --bg:#080812;--card:#1a1a35;--border:#2a2a44;
+  --green:#1D9E75;--amber:#EF9F27;--red:#E24B4A;--purple:#7F77DD;
+  --text:#ccccdd;--muted:#7777aa;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;background:#0d0d1a;font-family:'JetBrains Mono',monospace;color:#ccccdd}
-body{display:flex;flex-direction:column;padding:12px;gap:8px}
-.header{display:flex;justify-content:space-between;align-items:baseline;flex-shrink:0}
-.header h3{font-size:.95em;color:#fff;font-weight:700}
-.header span{font-size:.7em;color:#7777aa}
-.canvases{display:flex;gap:10px;flex:1;min-height:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'JetBrains Mono',monospace;color:var(--text)}
+body{display:flex;flex-direction:column;padding:10px;gap:7px}
+.hdr{display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.hdr h3{font-size:.9em;color:#fff;font-weight:700}
+.hdr span{font-size:.65em;color:var(--muted)}
+.canvases{display:flex;gap:8px;flex:1;min-height:0}
 .cv-wrap{flex:1;display:flex;flex-direction:column;gap:4px;min-height:0}
-.cv-label{font-size:.68em;color:#7777aa;text-align:center;flex-shrink:0}
-canvas{border-radius:8px;border:1px solid #2a2a44;background:#080812;width:100%;flex:1;display:block;min-height:0}
-.controls{flex-shrink:0;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start}
-.card{background:#1a1a35;border:1px solid #2a2a44;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;flex:1;min-width:180px}
-.card h4{font-size:.65em;color:#7777aa;text-transform:uppercase;letter-spacing:.07em}
+.cv-label{font-size:.62em;color:var(--muted);text-align:center;flex-shrink:0;text-transform:uppercase;letter-spacing:.07em}
+canvas{border-radius:8px;border:1px solid var(--border);background:#050510;width:100%;flex:1;display:block;min-height:0}
+.controls{flex-shrink:0;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px 11px;display:flex;flex-direction:column;gap:6px;flex:1;min-width:155px}
+.card h4{font-size:.62em;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
 .sg{display:flex;flex-direction:column;gap:3px}
-.sh{display:flex;justify-content:space-between;font-size:.7em;color:#7777aa}
-input[type=range]{width:100%;appearance:none;height:4px;border-radius:2px;background:#252545;outline:none;cursor:pointer}
-input[type=range]::-webkit-slider-thumb{appearance:none;width:12px;height:12px;border-radius:50%;cursor:pointer;border:2px solid #fff}
-.outcomes{display:flex;gap:8px;flex-wrap:wrap;flex:1;min-width:220px}
-.outcome{flex:1;min-width:80px;border-radius:8px;padding:8px 10px;font-size:.68em;border:1px solid;transition:all .25s}
-.outcome .count{font-size:1.6em;font-weight:700;line-height:1}
-.outcome .lbl{font-size:.8em;margin-top:2px;line-height:1.3}
-.fused{border-color:#1D9E75;background:rgba(29,158,117,.08)}.fused .count{color:#1D9E75}
-.lidar{border-color:#EF9F27;background:rgba(239,159,39,.08)}.lidar .count{color:#EF9F27}
-.drop{border-color:#E24B4A;background:rgba(226,75,74,.08)}.drop .count{color:#E24B4A}
+.sh{display:flex;justify-content:space-between;font-size:.68em;color:var(--muted)}
+input[type=range]{width:100%;appearance:none;height:3px;border-radius:2px;background:#252545;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:11px;height:11px;border-radius:50%;cursor:pointer;border:2px solid #fff}
+.outcomes{display:flex;gap:7px;flex-wrap:wrap;flex:1;min-width:185px;align-items:stretch}
+.outcome{flex:1;min-width:60px;border-radius:8px;padding:8px 10px;font-size:.66em;border:1px solid;transition:all .25s;display:flex;flex-direction:column;gap:2px}
+.outcome .count{font-size:1.55em;font-weight:700;line-height:1}
+.outcome .lbl{font-size:.8em;line-height:1.3;opacity:.8}
+.fused{border-color:var(--green);background:rgba(29,158,117,.08)}.fused .count{color:var(--green)}
+.lidar{border-color:var(--amber);background:rgba(239,159,39,.08)}.lidar .count{color:var(--amber)}
+.drop{border-color:var(--red);background:rgba(226,75,74,.08)}.drop .count{color:var(--red)}
 </style>
 </head>
 <body>
-<div class="header">
-  <h3>Widget — LiDAR→Image Projection &amp; Fusion</h3>
-  <span>Adjust cone position, watch the projection land</span>
-</div>
 
+<div class="hdr">
+  <h3>LiDAR → Image Projection &amp; Fusion</h3>
+  <span>Move cones · watch the projection land</span>
+</div>
 <div class="canvases">
-  <div class="cv-wrap">
-    <div class="cv-label">LiDAR Frame — Top-Down View</div>
-    <canvas id="cTop"></canvas>
-  </div>
-  <div class="cv-wrap">
-    <div class="cv-label">Camera Frame — Projected Image</div>
-    <canvas id="cCam"></canvas>
-  </div>
+  <div class="cv-wrap"><div class="cv-label">LiDAR Frame — Top-Down</div><canvas id="cTop"></canvas></div>
+  <div class="cv-wrap"><div class="cv-label">Camera Frame — Projected Image</div><canvas id="cCam"></canvas></div>
 </div>
-
 <div class="controls">
   <div class="card">
-    <h4>Cone 1 (orange)</h4>
-    <div class="sg">
-      <div class="sh"><span style="color:#EF9F27">X — lateral (left/right)</span><span id="v1x" style="color:#EF9F27">−1.5 m</span></div>
-      <input type="range" id="s1x" min="-6" max="6" step="0.25" value="-1.5" style="--col:#EF9F27">
-    </div>
-    <div class="sg">
-      <div class="sh"><span style="color:#EF9F27">Z — depth (forward)</span><span id="v1z" style="color:#EF9F27">8.0 m</span></div>
-      <input type="range" id="s1z" min="2" max="20" step="0.5" value="8" style="--col:#EF9F27">
-    </div>
+    <h4>Cone 1 <span style="color:#EF9F27">▲</span></h4>
+    <div class="sg"><div class="sh"><span style="color:#EF9F27">X lateral</span><span id="v1x" style="color:#EF9F27">−1.5 m</span></div>
+    <input type="range" id="s1x" min="-4" max="4" step="0.25" value="-1.5" style="accent-color:#EF9F27"></div>
+    <div class="sg"><div class="sh"><span style="color:#EF9F27">Y height</span><span id="v1y" style="color:#EF9F27">0.00 m</span></div>
+    <input type="range" id="s1y" min="-0.3" max="1.5" step="0.05" value="0" style="accent-color:#EF9F27"></div>
+    <div class="sg"><div class="sh"><span style="color:#EF9F27">Z depth</span><span id="v1z" style="color:#EF9F27">3.0 m</span></div>
+    <input type="range" id="s1z" min="1" max="18" step="0.25" value="3" style="accent-color:#EF9F27"></div>
   </div>
   <div class="card">
-    <h4>Cone 2 (purple)</h4>
-    <div class="sg">
-      <div class="sh"><span style="color:#7F77DD">X — lateral (left/right)</span><span id="v2x" style="color:#7F77DD">+1.5 m</span></div>
-      <input type="range" id="s2x" min="-6" max="6" step="0.25" value="1.5" style="--col:#7F77DD">
-    </div>
-    <div class="sg">
-      <div class="sh"><span style="color:#7F77DD">Z — depth (forward)</span><span id="v2z" style="color:#7F77DD">8.0 m</span></div>
-      <input type="range" id="s2z" min="2" max="20" step="0.5" value="8" style="--col:#7F77DD">
-    </div>
+    <h4>Cone 2 <span style="color:#7F77DD">▲</span></h4>
+    <div class="sg"><div class="sh"><span style="color:#7F77DD">X lateral</span><span id="v2x" style="color:#7F77DD">+1.5 m</span></div>
+    <input type="range" id="s2x" min="-4" max="4" step="0.25" value="1.5" style="accent-color:#7F77DD"></div>
+    <div class="sg"><div class="sh"><span style="color:#7F77DD">Y height</span><span id="v2y" style="color:#7F77DD">0.00 m</span></div>
+    <input type="range" id="s2y" min="-0.3" max="1.5" step="0.05" value="0" style="accent-color:#7F77DD"></div>
+    <div class="sg"><div class="sh"><span style="color:#7F77DD">Z depth</span><span id="v2z" style="color:#7F77DD">12.0 m</span></div>
+    <input type="range" id="s2z" min="1" max="18" step="0.25" value="12" style="accent-color:#7F77DD"></div>
   </div>
-  <div class="card">
+  <div class="card" style="max-width:180px">
     <h4>Match Tolerance</h4>
-    <div class="sg">
-      <div class="sh"><span style="color:#7777aa">BBox margin (px)</span><span id="vM" style="color:#7F77DD">10 px</span></div>
-      <input type="range" id="sM" min="0" max="60" step="2" value="10">
-    </div>
-    <div style="font-size:.65em;color:#7777aa;margin-top:4px;line-height:1.5">
-      Camera optical frame (Obj_F):<br>
-      <span style="color:#1D9E75">u = fx·(X / Z) + cx</span><br>
-      <span style="color:#1D9E75">v = fy·(Y / Z) + cy</span><br>
-      <span style="color:#444466">X = lateral · Z = depth · Y ≈ fixed<br>(cone near ground → constant height offset)</span>
+    <div class="sg"><div class="sh"><span>BBox margin</span><span id="vM" style="color:var(--purple)">10 px</span></div>
+    <input type="range" id="sM" min="0" max="80" step="2" value="10" style="accent-color:var(--purple)"></div>
+    <div style="font-size:.6em;color:var(--muted);margin-top:2px;line-height:1.65">
+      <span style="color:var(--green)">u = fx·(X/Z) + cx</span><br>
+      <span style="color:var(--green)">v = fy·(−Y/Z) + cy</span><br>
+      <span style="opacity:.55">+Y world → up → lower v</span>
     </div>
   </div>
   <div class="outcomes">
     <div class="outcome fused"><div class="count" id="oF">0</div><div class="lbl">Fused ✓<br>pos+colour</div></div>
-    <div class="outcome lidar"><div class="count" id="oL">0</div><div class="lbl">LiDAR-only<br>unknown · 0.9</div></div>
+    <div class="outcome lidar"><div class="count" id="oL">0</div><div class="lbl">LiDAR-only<br>0.9 conf</div></div>
     <div class="outcome drop"><div class="count" id="oD">0</div><div class="lbl">Dropped ✗<br>no LiDAR</div></div>
   </div>
 </div>
 
 <script>
-const cTop=document.getElementById('cTop'), ctxT=cTop.getContext('2d');
-const cCam=document.getElementById('cCam'), ctxC=cCam.getContext('2d');
+// ── Camera intrinsics ──────────────────────────────────────────────
+// Tighter FOV: use fx=480 (≈67° HFOV instead of 90°) — "zoomed in" feel
+// Virtual image still 640×480 so projection math is unchanged
+const FX=480, FY=480, CX=320, CY=240;
+const VW=640, VH=480;
 
-// Camera intrinsics (CarMaker defaults)
-const FX=320, FY=320, CX=320, CY=240;
-const IMG_W=640, IMG_H=480;
+// ── Track layout ───────────────────────────────────────────────────
+// FSAI straight: left cones on X = −1.5m line, right cones on X = +1.5m line
+// Cones spaced every 5m along Z, starting at Z=4m
+const TRACK_X_L = -1.5;  // left boundary X
+const TRACK_X_R =  1.5;  // right boundary X
+const CONE_Y    =  0.0; // cone centre height (m)
+const CONE_Z_NEAR = 3.0;
+const CONE_Z_FAR  = 12.0;
 
-// YOLO bboxes — perspective sizing: outer cones closer → bigger, inner cones farther → smaller
-const YOLO=[
-  {cx:110, cy:265, w:54, h:52, label:'cone?'},   // outer left  — closest, largest
-  {cx:250, cy:262, w:38, h:36, label:'cone?'},   // inner left  — farther, smaller
-  {cx:390, cy:262, w:38, h:36, label:'cone?'},   // inner right — farther, smaller
-  {cx:530, cy:265, w:54, h:52, label:'cone?'},   // outer right — closest, largest
-];
-
-// Cone colours
-const C1_COL='#EF9F27', C2_COL='#7F77DD';
-
-function resize(){
-  cTop.width=cTop.offsetWidth||350; cTop.height=cTop.offsetHeight||250;
-  cCam.width=cCam.offsetWidth||350; cCam.height=cCam.offsetHeight||250;
+// These are the 4 static YOLO detections — one near + one far on each side
+// Box sizing: padded to look like a real YOLO bbox (~square for close, slightly taller for far)
+function makeYolo(){
+  const defs=[
+    {X:TRACK_X_L, Y:CONE_Y, Z:CONE_Z_NEAR, W:0.50, H:0.44},  // left  near — close, big
+    {X:TRACK_X_L, Y:CONE_Y, Z:CONE_Z_FAR,  W:0.44, H:0.38},  // left  far  — small
+    {X:TRACK_X_R, Y:CONE_Y, Z:CONE_Z_FAR,  W:0.44, H:0.38},  // right far  — small
+    {X:TRACK_X_R, Y:CONE_Y, Z:CONE_Z_NEAR, W:0.50, H:0.44},  // right near — close, big
+  ];
+  return defs.map(d=>{
+    const u = FX*(d.X/d.Z)+CX;
+    // v: cone centre projected — Y positive up means v < CY
+    const v = FY*(-d.Y/d.Z)+CY;
+    const w = FX*d.W/d.Z;
+    const h = FY*d.H/d.Z;
+    return {cx:u, cy:v, w, h};
+  });
 }
+const YOLO = makeYolo();
 
-// Widget coordinate convention:
-//   X = lateral (left/right across track, neg=left)
-//   Y = height above ground (fixed ~0.2m for cone top)
-//   Z = depth forward (distance ahead)
-// Camera optical: u = fx*(X/Z)+cx,  v = fy*(-Y/Z)+cy
-function project(cx,cz){ return {u:FX*(cx/cz)+CX, v:FY*(-0.2/cz)+CY}; }
-
-// Top-down view: horizontal = X (lateral), vertical = Z (depth up the canvas)
-// X: -7..7, Z: 0..20
-function w2t(cx,cz){
-  const W=cTop.width, H=cTop.height;
-  return {px:(cx+7)/14*W, py:(1-cz/22)*H*0.92+H*0.04};
+// ── Projection ─────────────────────────────────────────────────────
+function project(X,Y,Z){
+  if(Z<0.05) return null;
+  const u=FX*(X/Z)+CX, v=FY*(-Y/Z)+CY;
+  return {u, v, inFrame:u>0&&u<VW&&v>0&&v<VH};
 }
+// Virtual image → canvas
+function v2c(u,v,CW,CH){ return {px:u/VW*CW, py:v/VH*CH}; }
 
-// Scale world-metres to camera-image pixels, then to canvas display pixels
-function imgPxToCanvas(iu,iv){
-  const W=cCam.width, H=cCam.height;
-  return {px:(iu/IMG_W)*W, py:(iv/IMG_H)*H};
-}
-
-function inBbox(u,v,bbox,margin){
-  return u>=bbox.cx-bbox.w/2-margin && u<=bbox.cx+bbox.w/2+margin &&
-         v>=bbox.cy-bbox.h/2-margin && v<=bbox.cy+bbox.h/2+margin;
-}
-
+// ── Main draw ──────────────────────────────────────────────────────
 function draw(){
-  resize();
-  const margin=parseInt(document.getElementById('sM').value);
-  // Each cone: cx=lateral(X), cz=depth(Z), Y=0.2m fixed
-  const c1={cx:parseFloat(document.getElementById('s1x').value),
-             cz:parseFloat(document.getElementById('s1z').value)};
-  const c2={cx:parseFloat(document.getElementById('s2x').value),
-             cz:parseFloat(document.getElementById('s2z').value)};
-  const cones=[{cone:c1,col:C1_COL},{cone:c2,col:C2_COL}];
-
-  // ── TOP-DOWN VIEW ──────────────────────────────────────────────
+  const cTop=document.getElementById('cTop'), ctxT=cTop.getContext('2d');
+  const cCam=document.getElementById('cCam'), ctxC=cCam.getContext('2d');
+  cTop.width=cTop.offsetWidth||400; cTop.height=cTop.offsetHeight||300;
+  cCam.width=cCam.offsetWidth||400; cCam.height=cCam.offsetHeight||300;
   const TW=cTop.width, TH=cTop.height;
-  ctxT.fillStyle='#080812'; ctxT.fillRect(0,0,TW,TH);
-  ctxT.strokeStyle='#111128'; ctxT.lineWidth=1; ctxT.beginPath();
-  for(let x=-6;x<=6;x+=3){const{px}=w2t(x,0);ctxT.moveTo(px,0);ctxT.lineTo(px,TH);}
-  for(let z=0;z<=20;z+=4){const{py}=w2t(0,z);ctxT.moveTo(0,py);ctxT.lineTo(TW,py);}
+  const CW=cCam.width,  CH=cCam.height;
+
+  const gv=id=>parseFloat(document.getElementById(id).value);
+  const margin=gv('sM');
+  const cones=[
+    {X:gv('s1x'), Y:gv('s1y'), Z:gv('s1z'), col:'#EF9F27', label:'C1'},
+    {X:gv('s2x'), Y:gv('s2y'), Z:gv('s2z'), col:'#7F77DD', label:'C2'},
+  ];
+
+  // DOM labels
+  document.getElementById('v1x').textContent=(cones[0].X>=0?'+':'')+cones[0].X.toFixed(2)+' m';
+  document.getElementById('v1y').textContent=cones[0].Y.toFixed(2)+' m';
+  document.getElementById('v1z').textContent=cones[0].Z.toFixed(1)+' m';
+  document.getElementById('v2x').textContent=(cones[1].X>=0?'+':'')+cones[1].X.toFixed(2)+' m';
+  document.getElementById('v2y').textContent=cones[1].Y.toFixed(2)+' m';
+  document.getElementById('v2z').textContent=cones[1].Z.toFixed(1)+' m';
+  document.getElementById('vM').textContent=margin.toFixed(0)+' px';
+
+  // ── TOP-DOWN ───────────────────────────────────────────────────
+  ctxT.fillStyle='#050510'; ctxT.fillRect(0,0,TW,TH);
+
+  // World: X ∈ [-4,4], Z ∈ [0,15]
+  function w2t(x,z){ return {px:(x+4)/8*TW, py:(1-z/16)*TH*0.93+TH*0.035}; }
+
+  // Grid
+  ctxT.strokeStyle='#0e0e28'; ctxT.lineWidth=1; ctxT.beginPath();
+  for(let x=-3;x<=3;x+=1.5){const{px}=w2t(x,0);ctxT.moveTo(px,0);ctxT.lineTo(px,TH);}
+  for(let z=0;z<=14;z+=2){const{py}=w2t(0,z);ctxT.moveTo(0,py);ctxT.lineTo(TW,py);}
   ctxT.stroke();
 
-  // LiDAR origin (car, bottom-centre)
+  // Track boundary lines (the X=±1.5 lines)
+  ctxT.strokeStyle='#1e1e50'; ctxT.lineWidth=1.5;
+  [TRACK_X_L, TRACK_X_R].forEach(x=>{
+    const a=w2t(x,0), b=w2t(x,15);
+    ctxT.beginPath(); ctxT.moveTo(a.px,a.py); ctxT.lineTo(b.px,b.py); ctxT.stroke();
+  });
+
+  // Static YOLO reference cones — drawn on the track lines
+  const refCones=[
+    {X:TRACK_X_L, Z:CONE_Z_NEAR},
+    {X:TRACK_X_L, Z:CONE_Z_FAR},
+    {X:TRACK_X_R, Z:CONE_Z_FAR},
+    {X:TRACK_X_R, Z:CONE_Z_NEAR},
+  ];
+  refCones.forEach(d=>{
+    const{px,py}=w2t(d.X,d.Z);
+    ctxT.fillStyle='#28285a';
+    ctxT.beginPath(); ctxT.moveTo(px,py-6); ctxT.lineTo(px-4,py+4); ctxT.lineTo(px+4,py+4); ctxT.fill();
+  });
+
+  // Camera origin
   const{px:ox,py:oy}=w2t(0,0);
-  ctxT.fillStyle='#7F77DD';ctxT.beginPath();ctxT.arc(ox,oy,7,0,Math.PI*2);ctxT.fill();
-  ctxT.fillStyle='#7F77DD';ctxT.font='9px JetBrains Mono';ctxT.textAlign='center';
-  ctxT.fillText('LiDAR',ox,oy+18);
+  ctxT.fillStyle='#7F77DD'; ctxT.beginPath(); ctxT.arc(ox,oy,5,0,Math.PI*2); ctxT.fill();
+  ctxT.fillStyle='#7F77DD'; ctxT.font='7px JetBrains Mono'; ctxT.textAlign='center';
+  ctxT.fillText('cam',ox,oy+13);
 
-  // Camera FOV cone (±atan(CX/FX) ≈ 45° half-angle)
-  ctxT.strokeStyle='#7F77DD22';ctxT.lineWidth=1;ctxT.setLineDash([4,6]);
-  const fovHalfX=Math.atan(CX/FX);
-  const maxZ=21;
-  const{px:f1x,py:f1y}=w2t(-maxZ*Math.tan(fovHalfX),maxZ);
-  const{px:f2x,py:f2y}=w2t( maxZ*Math.tan(fovHalfX),maxZ);
-  ctxT.beginPath();ctxT.moveTo(ox,oy);ctxT.lineTo(f1x,f1y);
-  ctxT.moveTo(ox,oy);ctxT.lineTo(f2x,f2y);ctxT.stroke();ctxT.setLineDash([]);
+  // FOV
+  const hfov=Math.atan(CX/FX);
+  ctxT.strokeStyle='rgba(127,119,221,0.12)'; ctxT.lineWidth=1; ctxT.setLineDash([4,6]);
+  const fl=w2t(-16*Math.tan(hfov),16), fr=w2t(16*Math.tan(hfov),16);
+  ctxT.beginPath(); ctxT.moveTo(ox,oy); ctxT.lineTo(fl.px,fl.py);
+  ctxT.moveTo(ox,oy); ctxT.lineTo(fr.px,fr.py); ctxT.stroke(); ctxT.setLineDash([]);
 
-  // Cones + bearing lines
-  for(const{cone,col} of cones){
-    const{px,py}=w2t(cone.cx,cone.cz);
-    ctxT.strokeStyle=col+'44';ctxT.lineWidth=1;ctxT.setLineDash([3,5]);
-    ctxT.beginPath();ctxT.moveTo(ox,oy);ctxT.lineTo(px,py);ctxT.stroke();ctxT.setLineDash([]);
-    ctxT.fillStyle=col;ctxT.beginPath();ctxT.arc(px,py,7,0,Math.PI*2);ctxT.fill();
-    ctxT.fillStyle=col;ctxT.font='9px JetBrains Mono';ctxT.textAlign='center';
-    ctxT.fillText(`Z=${cone.cz.toFixed(0)}m`,px,py-11);
+  // User cones + bearing lines
+  cones.forEach(c=>{
+    const{px,py}=w2t(c.X,c.Z);
+    ctxT.strokeStyle=c.col+'44'; ctxT.lineWidth=1; ctxT.setLineDash([3,5]);
+    ctxT.beginPath(); ctxT.moveTo(ox,oy); ctxT.lineTo(px,py); ctxT.stroke(); ctxT.setLineDash([]);
+    ctxT.fillStyle=c.col;
+    ctxT.beginPath(); ctxT.moveTo(px,py-9); ctxT.lineTo(px-6,py+5); ctxT.lineTo(px+6,py+5); ctxT.fill();
+    ctxT.fillStyle=c.col; ctxT.font='8px JetBrains Mono'; ctxT.textAlign='center';
+    ctxT.fillText('Z='+c.Z.toFixed(1)+'m',px,py-13);
+  });
+
+  // Z labels
+  ctxT.fillStyle='#222250'; ctxT.font='7px JetBrains Mono'; ctxT.textAlign='right';
+  for(let z=0;z<=14;z+=2){const{px,py}=w2t(-4,z); ctxT.fillText(z+'m',px+12,py+3);}
+
+  // ── CAMERA IMAGE ───────────────────────────────────────────────
+  const sky=ctxC.createLinearGradient(0,0,0,CH);
+  sky.addColorStop(0,'#06061a'); sky.addColorStop(0.42,'#0b0b20');
+  sky.addColorStop(0.43,'#080d0a'); sky.addColorStop(1,'#060b06');
+  ctxC.fillStyle=sky; ctxC.fillRect(0,0,CW,CH);
+
+  // Horizon
+  const horizY=CH*0.43;
+  ctxC.strokeStyle='#111128'; ctxC.lineWidth=1;
+  ctxC.beginPath(); ctxC.moveTo(0,horizY); ctxC.lineTo(CW,horizY); ctxC.stroke();
+
+  // Scanlines
+  for(let y=0;y<CH;y+=3){ctxC.fillStyle='rgba(0,0,0,0.05)';ctxC.fillRect(0,y,CW,1);}
+
+  // Track perspective lines — vanish at horizon centre
+  // The track edges are at X=±1.5m. At the bottom of the frame (close range)
+  // they should be wide; they converge to the vanishing point.
+  // Compute where X=±1.5 at Z=1m projects, and where they hit the horizon.
+  const vpX=CW/2, vpY=horizY;
+  const nearZ=1.0;
+  const uL_near=FX*(TRACK_X_L/nearZ)+CX, uR_near=FX*(TRACK_X_R/nearZ)+CX;
+  const{px:tLnx}=v2c(uL_near,VH*0.98,CW,CH); // near bottom
+  const{px:tRnx}=v2c(uR_near,VH*0.98,CW,CH);
+  ctxC.strokeStyle='rgba(18,18,48,0.8)'; ctxC.lineWidth=1.5;
+  ctxC.beginPath();
+  ctxC.moveTo(vpX,vpY); ctxC.lineTo(tLnx,CH);
+  ctxC.moveTo(vpX,vpY); ctxC.lineTo(tRnx,CH);
+  ctxC.stroke();
+
+  // ── Project user cones ─────────────────────────────────────────
+  const projections=cones.map(c=>({...project(c.X,c.Y,c.Z), col:c.col, label:c.label}));
+
+  function inBox(u,v,b,mg){
+    return u>=b.cx-b.w/2-mg && u<=b.cx+b.w/2+mg &&
+           v>=b.cy-b.h/2-mg && v<=b.cy+b.h/2+mg;
   }
+  const matchedY=new Set(), matchedP=new Set();
+  projections.forEach((p,pi)=>{
+    if(!p||!p.inFrame)return;
+    YOLO.forEach((b,yi)=>{
+      if(matchedY.has(yi))return;
+      if(inBox(p.u,p.v,b,margin)){matchedY.add(yi);matchedP.add(pi);}
+    });
+  });
 
-  // Axis labels
-  ctxT.fillStyle='#333355';ctxT.font='8px JetBrains Mono';ctxT.textAlign='center';
-  for(let z=0;z<=20;z+=4){const{px,py}=w2t(-6.2,z);ctxT.fillText(z+'m',px+10,py+3);}
-  ctxT.fillStyle='#333355';ctxT.font='8px JetBrains Mono';
-  ctxT.fillText('← X lateral →',TW/2,TH-3);
-  ctxT.save();ctxT.translate(10,TH*.35);ctxT.rotate(-Math.PI/2);
-  ctxT.fillText('Z depth (forward)',0,0);ctxT.restore();
+  // ── Draw YOLO boxes ────────────────────────────────────────────
+  YOLO.forEach((b,yi)=>{
+    const matched=matchedY.has(yi);
+    const bc=matched?'#1D9E75':'#E24B4A';
+    const{px:bx,py:by}=v2c(b.cx,b.cy,CW,CH);
+    const bw=(b.w/VW)*CW, bh=(b.h/VH)*CH;
+    const mg=(margin/VW)*CW;
 
-  // ── CAMERA IMAGE VIEW ──────────────────────────────────────────
-  const CW=cCam.width, CH=cCam.height;
-  // Background gradient (fake camera image)
-  const grad=ctxC.createLinearGradient(0,0,0,CH);
-  grad.addColorStop(0,'#09091c');grad.addColorStop(.45,'#101020');grad.addColorStop(.46,'#0d1210');grad.addColorStop(1,'#080d08');
-  ctxC.fillStyle=grad;ctxC.fillRect(0,0,CW,CH);
-  // Scanline texture
-  for(let y=0;y<CH;y+=3){ctxC.fillStyle='rgba(0,0,0,0.1)';ctxC.fillRect(0,y,CW,1);}
-  // Horizon line
-  ctxC.strokeStyle='#1a1a2e';ctxC.lineWidth=1;
-  ctxC.beginPath();ctxC.moveTo(0,CH*.46);ctxC.lineTo(CW,CH*.46);ctxC.stroke();
-
-  // Project each cone: u = fx*(X/Z)+cx, v = fy*(-Y/Z)+cy
-  const projections=[];
-  for(const{cone,col} of cones){
-    if(cone.cz>0){
-      const{u,v}=project(cone.cx,cone.cz);
-      projections.push({u,v,col});
-    }
-  }
-
-  // YOLO boxes + match check
-  const matchedYolo=new Set();
-  const matchedProj=new Set();
-  for(let pi=0;pi<projections.length;pi++){
-    const{u,v}=projections[pi];
-    for(let yi=0;yi<YOLO.length;yi++){
-      if(matchedYolo.has(yi))continue;
-      if(inBbox(u,v,YOLO[yi],margin)){
-        matchedYolo.add(yi);matchedProj.add(pi);break;
-      }
-    }
-  }
-
-  // Draw YOLO boxes
-  for(let yi=0;yi<YOLO.length;yi++){
-    const b=YOLO[yi];
-    const matched=matchedYolo.has(yi);
-    const bCol=matched?'#1D9E75':'#E24B4A';
-    const{px:bx,py:by}=imgPxToCanvas(b.cx,b.cy);
-    const bw2=(b.w/IMG_W*CW)/2, bh2=(b.h/IMG_H*CH)/2;
-    const mg=(margin/IMG_W)*CW;
-    // margin dashed
-    ctxC.strokeStyle='#7F77DD33';ctxC.lineWidth=1;ctxC.setLineDash([3,4]);
-    ctxC.strokeRect(bx-bw2-mg,by-bh2-mg,(bw2+mg)*2,(bh2+mg)*2);
+    // Margin dashed
+    ctxC.strokeStyle='rgba(127,119,221,0.18)'; ctxC.lineWidth=1; ctxC.setLineDash([3,4]);
+    ctxC.strokeRect(bx-bw/2-mg, by-bh/2-mg, bw+mg*2, bh+mg*2);
     ctxC.setLineDash([]);
-    // bbox fill + border
-    ctxC.fillStyle=matched?'rgba(29,158,117,.1)':'rgba(226,75,74,.08)';
-    ctxC.fillRect(bx-bw2,by-bh2,bw2*2,bh2*2);
-    ctxC.strokeStyle=bCol;ctxC.lineWidth=2;
-    ctxC.strokeRect(bx-bw2,by-bh2,bw2*2,bh2*2);
-    // label
-    ctxC.fillStyle=bCol;ctxC.font='bold 9px JetBrains Mono';ctxC.textAlign='center';
-    ctxC.fillText(matched?'Fused ✓':'Dropped ✗',bx,by-bh2-5);
-    ctxC.fillStyle=bCol+'88';ctxC.font='8px JetBrains Mono';
-    ctxC.fillText(b.label,bx,by+bh2-4);
-  }
 
-  // Draw projected dots
-  for(let pi=0;pi<projections.length;pi++){
-    const{u,v,col}=projections[pi];
-    const{px,py}=imgPxToCanvas(u,v);
-    const isMatched=matchedProj.has(pi);
-    const dotCol=isMatched?'#1D9E75':col;
-    const r=8;
-    // glow
-    const grd=ctxC.createRadialGradient(px,py,1,px,py,r*2);
-    grd.addColorStop(0,dotCol+'66');grd.addColorStop(1,'transparent');
-    ctxC.fillStyle=grd;ctxC.beginPath();ctxC.arc(px,py,r*2,0,Math.PI*2);ctxC.fill();
-    // crosshair
-    ctxC.strokeStyle=dotCol;ctxC.lineWidth=2;
-    ctxC.beginPath();ctxC.moveTo(px-r,py);ctxC.lineTo(px+r,py);
-    ctxC.moveTo(px,py-r);ctxC.lineTo(px,py+r);ctxC.stroke();
-    ctxC.fillStyle=dotCol;ctxC.beginPath();ctxC.arc(px,py,3,0,Math.PI*2);ctxC.fill();
-    // outcome label
-    ctxC.fillStyle=dotCol;ctxC.font='bold 9px JetBrains Mono';ctxC.textAlign='left';
-    ctxC.fillText(isMatched?'in box →fused':'outside →LiDAR-only',px+r+3,py+3);
-  }
+    // Fill + border
+    ctxC.fillStyle=matched?'rgba(29,158,117,0.1)':'rgba(226,75,74,0.07)';
+    ctxC.fillRect(bx-bw/2, by-bh/2, bw, bh);
+    ctxC.strokeStyle=bc; ctxC.lineWidth=1.5;
+    ctxC.strokeRect(bx-bw/2, by-bh/2, bw, bh);
 
-  // ── Outcome counters ───────────────────────────────────────────
-  const nF=matchedProj.size;
-  const nL=projections.length-nF;
-  const nD=YOLO.length-matchedYolo.size;
+    // Corner ticks
+    const tk=Math.min(bw,bh)*0.3;
+    ctxC.strokeStyle=bc; ctxC.lineWidth=2; ctxC.beginPath();
+    ctxC.moveTo(bx-bw/2+tk,by-bh/2); ctxC.lineTo(bx-bw/2,by-bh/2); ctxC.lineTo(bx-bw/2,by-bh/2+tk);
+    ctxC.moveTo(bx+bw/2-tk,by-bh/2); ctxC.lineTo(bx+bw/2,by-bh/2); ctxC.lineTo(bx+bw/2,by-bh/2+tk);
+    ctxC.moveTo(bx-bw/2+tk,by+bh/2); ctxC.lineTo(bx-bw/2,by+bh/2); ctxC.lineTo(bx-bw/2,by+bh/2-tk);
+    ctxC.moveTo(bx+bw/2-tk,by+bh/2); ctxC.lineTo(bx+bw/2,by+bh/2); ctxC.lineTo(bx+bw/2,by+bh/2-tk);
+    ctxC.stroke();
+
+    // Label above box
+    ctxC.fillStyle=bc; ctxC.font='bold '+Math.max(Math.round(bw*0.3),7)+'px JetBrains Mono';
+    ctxC.textAlign='center';
+    ctxC.fillText(matched?'Fused ✓':'Dropped ✗', bx, by-bh/2-3);
+  });
+
+  // ── Draw projected LiDAR dots ──────────────────────────────────
+  projections.forEach((p,pi)=>{
+    if(!p||!p.inFrame)return;
+    const{px,py}=v2c(p.u,p.v,CW,CH);
+    const isMatch=matchedP.has(pi);
+    const dc=isMatch?'#1D9E75':p.col;
+    const r=6;
+    const grd=ctxC.createRadialGradient(px,py,1,px,py,r*3);
+    grd.addColorStop(0,dc+'55'); grd.addColorStop(1,'transparent');
+    ctxC.fillStyle=grd; ctxC.beginPath(); ctxC.arc(px,py,r*3,0,Math.PI*2); ctxC.fill();
+    ctxC.strokeStyle=dc; ctxC.lineWidth=1.5;
+    ctxC.beginPath();
+    ctxC.moveTo(px-r,py); ctxC.lineTo(px+r,py);
+    ctxC.moveTo(px,py-r); ctxC.lineTo(px,py+r);
+    ctxC.stroke();
+    ctxC.fillStyle=dc; ctxC.beginPath(); ctxC.arc(px,py,2.5,0,Math.PI*2); ctxC.fill();
+    ctxC.fillStyle=dc; ctxC.font='bold 8px JetBrains Mono'; ctxC.textAlign='left';
+    ctxC.fillText(isMatch?'→ fused':'→ LiDAR-only', px+r+3, py+3);
+    ctxC.fillStyle=dc+'88'; ctxC.font='7px JetBrains Mono';
+    ctxC.fillText('u='+Math.round(p.u)+' v='+Math.round(p.v), px+r+3, py+11);
+  });
+
+  // Counters
+  const nF=matchedP.size;
+  const nL=projections.filter((p,i)=>p&&p.inFrame&&!matchedP.has(i)).length;
+  const nD=YOLO.length-matchedY.size;
   document.getElementById('oF').textContent=nF;
   document.getElementById('oL').textContent=nL;
   document.getElementById('oD').textContent=nD;
-  document.getElementById('vM').textContent=margin+' px';
 }
 
-// ── Slider listeners ─────────────────────────────────────────────
-['s1x','s1z','s2x','s2z','sM'].forEach(id=>{
-  document.getElementById(id).addEventListener('input',()=>{
-    const x1=parseFloat(document.getElementById('s1x').value);
-    const z1=parseFloat(document.getElementById('s1z').value);
-    const x2=parseFloat(document.getElementById('s2x').value);
-    const z2=parseFloat(document.getElementById('s2z').value);
-    document.getElementById('v1x').textContent=(x1>=0?'+':'')+x1.toFixed(2)+' m';
-    document.getElementById('v1z').textContent=z1.toFixed(1)+' m';
-    document.getElementById('v2x').textContent=(x2>=0?'+':'')+x2.toFixed(2)+' m';
-    document.getElementById('v2z').textContent=z2.toFixed(1)+' m';
-    draw();
-  });
+['s1x','s1y','s1z','s2x','s2y','s2z','sM'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', draw);
 });
-
-// ── Thumb colours ────────────────────────────────────────────────
-document.querySelectorAll('input[type=range]').forEach(el=>{
-  const col=el.style.getPropertyValue('--col')||'#7F77DD';
-  el.style.setProperty('accent-color',col);
-});
-
-window.addEventListener('resize',draw);
-setTimeout(draw,60);
+window.addEventListener('resize', draw);
+setTimeout(draw, 60);
 </script>
-</body></html>
+</body>
+</html>
