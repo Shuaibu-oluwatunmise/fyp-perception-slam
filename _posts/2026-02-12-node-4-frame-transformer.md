@@ -12,7 +12,7 @@ pin: false
 
 > **Technical Deep Dive:** For the full code explanation and architecture of Phase 2, see the [Technical Deep Dive](/fyp-perception-slam/techposts/phase-2-technical-deep-dive/).
 
-I thought I finished Phase 2 yesterday. I was wrong.
+I hoped I finished Phase 2 yesterday. I was wrong.
 
 We successfully fused Camera and LiDAR data. We had functional cone detection. In my mind, the perception system was "Done".
 

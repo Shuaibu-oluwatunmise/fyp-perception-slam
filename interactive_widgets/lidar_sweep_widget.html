@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LiDAR Sweep</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080812;--card:#13132a;--border:#1e1e3a;
+  --green:#1D9E75;--amber:#EF9F27;--red:#E24B4A;--purple:#7F77DD;
+  --teal:#00A896;--text:#d0d0e8;--muted:#4a4a6a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'JetBrains Mono',monospace;color:var(--text)}
+body{display:flex;flex-direction:column;padding:10px;gap:7px}
+
+.hdr{display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.hdr h3{font-size:.88em;font-weight:700;color:#fff}
+.hdr span{font-size:.63em;color:var(--muted)}
+
+#c{border-radius:10px;border:1px solid var(--border);background:#050510;
+   width:100%;flex:1;display:block;min-height:0}
+
+.controls{flex-shrink:0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;
+  padding:9px 11px;display:flex;flex-direction:column;gap:7px;flex:1;min-width:175px}
+.card h4{font-size:.6em;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.sg{display:flex;flex-direction:column;gap:3px;flex:1;min-width:110px}
+.sh{display:flex;justify-content:space-between;font-size:.67em;color:var(--muted)}
+
+input[type=range]{width:100%;appearance:none;height:3px;border-radius:2px;
+  background:#1e1e3a;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:11px;height:11px;
+  border-radius:50%;background:var(--amber);cursor:pointer;border:2px solid #fff}
+
+.btns{display:flex;gap:6px;flex-shrink:0}
+button{background:#0e0e28;border:1px solid var(--purple);border-radius:6px;
+  color:var(--purple);font-family:'JetBrains Mono',monospace;font-size:.7em;
+  padding:6px 14px;cursor:pointer;white-space:nowrap;transition:background .15s}
+button:hover{background:#1a1a44}
+button.muted{border-color:var(--border);color:var(--muted)}
+button.muted:hover{color:var(--text);border-color:#444466}
+
+.stats{display:flex;gap:6px;flex-wrap:wrap}
+.stat{background:#07071a;border:1px solid var(--border);border-radius:6px;
+  padding:5px 9px;font-size:.65em;flex:1;min-width:75px}
+.stat .lbl{color:var(--muted);font-size:.9em}
+.stat .val{margin-top:2px;font-size:1.1em}
+
+.instr{background:rgba(239,159,39,0.05);border:1px solid rgba(239,159,39,0.15);
+  border-radius:8px;padding:8px 11px;font-size:.65em;line-height:1.6;
+  color:var(--text);max-width:300px;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h3>LiDAR Scanning as the Car Drives In</h3>
+  <span>Top-down · continuous sweep · FSAI layout</span>
+</div>
+<canvas id="c"></canvas>
+<div class="controls">
+  <div class="instr">
+    Hit <strong style="color:var(--amber)">▶ Start</strong>. The car drives toward 4 cones with its LiDAR spinning.
+    Watch <strong style="color:var(--green)">dense clusters</strong> build at cone positions —
+    sparse returns everywhere else. The final cloud is what DBSCAN processes.
+  </div>
+  <div class="card">
+    <h4>Controls</h4>
+    <div class="row">
+      <div class="sg">
+        <div class="sh"><span style="color:var(--amber)">Speed</span><span id="vSpd" style="color:var(--amber)">Medium</span></div>
+        <input type="range" id="sSpd" min="1" max="5" step="1" value="3" style="accent-color:var(--amber)">
+      </div>
+      <div class="btns">
+        <button id="btn">▶ Start</button>
+        <button id="reset" class="muted">↺ Reset</button>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="lbl">position</div><div class="val" id="sPos" style="color:var(--purple)">0 m</div></div>
+      <div class="stat"><div class="lbl">points</div><div class="val" id="sPts" style="color:var(--text)">0</div></div>
+      <div class="stat"><div class="lbl">clusters</div><div class="val" id="sCones" style="color:var(--green)">0 / 4</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const cv=document.getElementById('c'), ctx=cv.getContext('2d');
+
+// ── Scene ──────────────────────────────────────────────────────────
+const CONE_POSITIONS=[[20,3.5],[20,-3.5],[28,3.5],[28,-3.5]];
+const CONE_R=0.25;
+const CAR_START=2, CAR_END=24;
+const WALLS=[
+  {x1:-1,y1: 6.5,x2:37,y2: 6.5},
+  {x1:-1,y1:-6.5,x2:37,y2:-6.5},
+];
+
+let carX=CAR_START, sweepAngle=0;
+let pts=[], running=false, done=false, raf=null;
+
+function mul32(s){let _s=s;return()=>{_s|=0;_s=_s+0x6D2B79F5|0;let t=Math.imul(_s^_s>>>15,1|_s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const rng=mul32(77);
+
+// ── Helpers ────────────────────────────────────────────────────────
+function resize(){cv.width=cv.offsetWidth||600;cv.height=cv.offsetHeight||300;}
+function w2c(x,y){const W=cv.width,H=cv.height;return{px:(x+1)/38*W,py:(1-(y+8)/16)*H};}
+function wPx(d){return d/38*cv.width;}
+
+// ── Ray cast ───────────────────────────────────────────────────────
+function castRay(rad){
+  const ox=carX,oy=0,dx=Math.cos(rad),dy=Math.sin(rad);
+  let best=null;
+  for(const[cx,cy] of CONE_POSITIONS){
+    const fx=cx-ox,fy=cy-oy;
+    const b=-2*(dx*fx+dy*fy),c=fx*fx+fy*fy-CONE_R*CONE_R,disc=b*b-4*c;
+    if(disc<0)continue;
+    const t=(-b-Math.sqrt(disc))/2;
+    if(t>0.05&&(!best||t<best.t))best={t,x:ox+t*dx,y:oy+t*dy,isCone:true};
+  }
+  for(const w of WALLS){
+    const wx=w.x2-w.x1,wy=w.y2-w.y1,denom=dx*wy-dy*wx;
+    if(Math.abs(denom)<1e-9)continue;
+    const t=((w.x1-ox)*wy-(w.y1-oy)*wx)/denom;
+    const s=((w.x1-ox)*dy-(w.y1-oy)*dx)/denom;
+    if(t>0.05&&s>=0&&s<=1&&(!best||t<best.t))best={t,x:ox+t*dx,y:oy+t*dy,isCone:false};
+  }
+  return best;
+}
+
+// ── Render ─────────────────────────────────────────────────────────
+const CONE_COLS=['#1D9E75','#00A896','#2ec47a'];
+const LABELS=['Slow','Med-Slow','Medium','Med-Fast','Fast'];
+
+function render(){
+  resize();
+  const W=cv.width,H=cv.height;
+  ctx.fillStyle='#050510'; ctx.fillRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle='#0b0b22'; ctx.lineWidth=1; ctx.beginPath();
+  for(let x=0;x<=36;x+=4){const{px}=w2c(x,0);ctx.moveTo(px,0);ctx.lineTo(px,H);}
+  for(let y=-6;y<=6;y+=3){const{py}=w2c(0,y);ctx.moveTo(0,py);ctx.lineTo(W,py);}
+  ctx.stroke();
+
+  // Distance markers
+  ctx.fillStyle='#1e1e40'; ctx.font='8px JetBrains Mono'; ctx.textAlign='center';
+  for(let x=0;x<=36;x+=8){const{px,py}=w2c(x,7.2);ctx.fillText(x+'m',px,py);}
+
+  // Track boundaries
+  ctx.strokeStyle='#181848'; ctx.lineWidth=1.5; ctx.setLineDash([7,8]);
+  [{y:6.5},{y:-6.5}].forEach(({y})=>{
+    const a=w2c(-1,y),b=w2c(37,y);
+    ctx.beginPath();ctx.moveTo(a.px,a.py);ctx.lineTo(b.px,b.py);ctx.stroke();
+  });
+  ctx.setLineDash([]);
+
+  // Cone ghost outlines
+  for(const[cx,cy] of CONE_POSITIONS){
+    const{px,py}=w2c(cx,cy);
+    const sr=wPx(CONE_R);
+    ctx.strokeStyle='#1c1c44'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(px,py,sr,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle='#0e0e28'; ctx.fill();
+  }
+
+  // Point cloud — squares for cone returns, tiny squares for ground
+  for(const p of pts){
+    const{px,py}=w2c(p.x,p.y);
+    if(p.isCone){
+      ctx.fillStyle=p.col||'#1D9E75';
+      ctx.globalAlpha=0.85;
+      ctx.fillRect(px-2,py-2,4,4);
+    } else {
+      ctx.fillStyle='#1e1e3a';
+      ctx.globalAlpha=0.5;
+      ctx.fillRect(px-1,py-1,2,2);
+    }
+  }
+  ctx.globalAlpha=1;
+
+  // Dense cluster markers
+  let coneCount=0;
+  for(const[cx,cy] of CONE_POSITIONS){
+    const near=pts.filter(p=>p.isCone&&Math.abs(p.x-cx)<1.2&&Math.abs(p.y-cy)<1.2);
+    if(near.length>=6){
+      coneCount++;
+      const{px,py}=w2c(cx,cy);
+      const sr=wPx(CONE_R);
+      // Glow ring
+      ctx.strokeStyle='rgba(29,158,117,0.35)'; ctx.lineWidth=4;
+      ctx.beginPath(); ctx.arc(px,py,sr+5,0,Math.PI*2); ctx.stroke();
+      // Triangle marker
+      ctx.fillStyle='#1D9E75';
+      ctx.beginPath(); ctx.moveTo(px,py-sr-9); ctx.lineTo(px-6,py-sr+2); ctx.lineTo(px+6,py-sr+2); ctx.fill();
+    }
+  }
+
+  // Active beams
+  const{px:lx,py:ly}=w2c(carX,0);
+  const beamLen=wPx(13);
+  ctx.strokeStyle='rgba(239,159,39,0.2)'; ctx.lineWidth=1;
+  for(let k=0;k<3;k++){
+    const a=sweepAngle+k*Math.PI*2/3;
+    ctx.beginPath(); ctx.moveTo(lx,ly);
+    ctx.lineTo(lx+beamLen*Math.cos(a),ly+beamLen*Math.sin(a));
+    ctx.stroke();
+  }
+
+  // Car body
+  const carW=wPx(2.2),carH=wPx(1.1);
+  ctx.fillStyle='#111130'; ctx.strokeStyle='#7F77DD'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.roundRect(lx-carW/2,ly-carH/2,carW,carH,3); ctx.fill(); ctx.stroke();
+  // LiDAR sensor dot
+  ctx.fillStyle='#7F77DD'; ctx.beginPath(); ctx.arc(lx,ly,4,0,Math.PI*2); ctx.fill();
+  // spinning ring on sensor
+  ctx.strokeStyle='rgba(127,119,221,0.5)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.arc(lx,ly,7,sweepAngle,sweepAngle+Math.PI*1.2); ctx.stroke();
+  ctx.fillStyle='#7F77DD'; ctx.font='8px JetBrains Mono'; ctx.textAlign='left';
+  ctx.fillText('LiDAR',lx+10,ly-3);
+
+  // Done banner
+  if(done){
+    ctx.fillStyle='rgba(5,5,16,0.82)'; ctx.fillRect(0,H-28,W,28);
+    ctx.fillStyle='#1D9E75'; ctx.font='bold 10px JetBrains Mono'; ctx.textAlign='center';
+    ctx.fillText('Stopped. '+coneCount+'/4 cone clusters detected. Click ▶ to replay.',W/2,H-9);
+  }
+
+  document.getElementById('sPos').textContent=(carX-CAR_START).toFixed(1)+' m';
+  document.getElementById('sPts').textContent=pts.length;
+  document.getElementById('sCones').textContent=coneCount+' / 4';
+}
+
+// ── Tick ───────────────────────────────────────────────────────────
+const CAR_SPEEDS=[0.03,0.055,0.08,0.11,0.15];
+const SPIN=0.18, BEAMS=24;
+
+function tick(){
+  const spd=CAR_SPEEDS[parseInt(document.getElementById('sSpd').value)-1];
+  carX+=spd; sweepAngle+=SPIN;
+  for(let i=0;i<BEAMS;i++){
+    const angle=sweepAngle+(i/BEAMS)*Math.PI*2+(rng()-.5)*0.05;
+    const hit=castRay(angle);
+    if(hit){
+      const col=hit.isCone?CONE_COLS[Math.floor(rng()*3)]:null;
+      pts.push({x:hit.x+(rng()-.5)*0.07,y:hit.y+(rng()-.5)*0.07,isCone:hit.isCone,col});
+    }
+  }
+  render();
+  if(carX>=CAR_END){
+    carX=CAR_END; done=true; running=false;
+    document.getElementById('btn').textContent='▶ Replay';
+    render(); return;
+  }
+  if(running) raf=requestAnimationFrame(tick);
+}
+
+// ── Controls ───────────────────────────────────────────────────────
+document.getElementById('btn').addEventListener('click',()=>{
+  if(running){running=false;cancelAnimationFrame(raf);document.getElementById('btn').textContent='▶ Start';return;}
+  if(done){pts=[];carX=CAR_START;sweepAngle=0;done=false;}
+  running=true; document.getElementById('btn').textContent='■ Stop'; tick();
+});
+document.getElementById('reset').addEventListener('click',()=>{
+  running=false;done=false;cancelAnimationFrame(raf);
+  pts=[];carX=CAR_START;sweepAngle=0;
+  document.getElementById('btn').textContent='▶ Start';
+  render();
+});
+document.getElementById('sSpd').addEventListener('input',e=>{
+  document.getElementById('vSpd').textContent=LABELS[e.target.value-1];
+});
+window.addEventListener('resize',render);
+setTimeout(render,60);
+</script>
+</body>
+</html>

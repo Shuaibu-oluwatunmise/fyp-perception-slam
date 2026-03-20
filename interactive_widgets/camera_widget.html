@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pinhole Camera Projection</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080812;--card:#13132a;--border:#1e1e3a;
+  --green:#1D9E75;--amber:#EF9F27;--red:#E24B4A;--purple:#7F77DD;
+  --text:#d0d0e8;--muted:#4a4a6a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'JetBrains Mono',monospace;color:var(--text)}
+body{display:flex;flex-direction:column;padding:10px;gap:7px}
+
+.hdr{display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.hdr h3{font-size:.88em;font-weight:700;color:#fff}
+.hdr span{font-size:.63em;color:var(--muted)}
+
+.canvases{display:flex;gap:8px;flex:1;min-height:0}
+.cv-wrap{flex:1;display:flex;flex-direction:column;gap:4px;min-height:0}
+.cv-label{font-size:.59em;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;flex-shrink:0}
+canvas{border-radius:8px;border:1px solid var(--border);background:#050510;width:100%;flex:1;display:block;min-height:0}
+
+.controls{flex-shrink:0;display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;
+  padding:9px 11px;display:flex;flex-direction:column;gap:7px;flex:1;min-width:140px}
+.card h4{font-size:.6em;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.sg{display:flex;flex-direction:column;gap:3px}
+.sh{display:flex;justify-content:space-between;font-size:.67em;color:var(--muted)}
+input[type=range]{width:100%;appearance:none;height:3px;border-radius:2px;
+  background:#1e1e3a;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:11px;height:11px;
+  border-radius:50%;cursor:pointer;border:2px solid #fff}
+
+.err-pair{display:flex;gap:8px;flex:2;min-width:280px}
+.err-card{flex:1;border-radius:8px;padding:9px 11px;border:1px solid;
+  display:flex;flex-direction:column;gap:3px;transition:all .3s}
+.err-card .lbl{font-size:.58em;text-transform:uppercase;letter-spacing:.08em;opacity:.65}
+.err-card .num{font-size:1.9em;font-weight:700;line-height:1.1;transition:color .3s}
+.err-card .sub{font-size:.6em;opacity:.55;margin-top:1px}
+.err-card .verdict{font-size:.63em;margin-top:3px;font-weight:600}
+.pass{border-color:var(--green);background:rgba(29,158,117,.07)}
+.pass .num,.pass .verdict{color:var(--green)}
+.fail{border-color:var(--red);background:rgba(226,75,74,.07)}
+.fail .num,.fail .verdict{color:var(--red)}
+
+.legend{display:flex;gap:12px;flex-wrap:wrap;align-items:center;
+  font-size:.6em;color:var(--muted);flex-shrink:0;padding:2px 0}
+.leg{display:flex;align-items:center;gap:5px}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.leg-ghost{width:10px;height:10px;border-radius:2px;flex-shrink:0;
+  border:1.5px dashed;background:transparent}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h3>Camera Depth Error — True vs Estimated Position</h3>
+  <span>err = px_err × Z / fx &nbsp;·&nbsp; fx = 320</span>
+</div>
+
+<div class="canvases">
+  <div class="cv-wrap">
+    <span class="cv-label">Top-Down — true position (ghost) vs camera estimate (solid)</span>
+    <canvas id="cvTop"></canvas>
+  </div>
+  <div class="cv-wrap">
+    <span class="cv-label">Camera Image — bbox jitter drives the estimate</span>
+    <canvas id="cvImg"></canvas>
+  </div>
+</div>
+
+<!-- legend -->
+<div class="legend">
+  <div class="leg"><div class="leg-ghost" style="border-color:#1D9E75"></div>True position (LiDAR)</div>
+  <div class="leg"><div class="leg-dot" style="background:#1D9E75"></div>Camera estimate — C1 (Z=8m)</div>
+  <div class="leg"><div class="leg-ghost" style="border-color:#7F77DD"></div>True position (LiDAR)</div>
+  <div class="leg"><div class="leg-dot" style="background:#7F77DD"></div>Camera estimate — C2 (Z=16m)</div>
+</div>
+
+<div class="controls">
+
+  <div class="card" style="max-width:220px;justify-content:center">
+    <h4>YOLO Bbox Jitter</h4>
+    <div class="sg">
+      <div class="sh">
+        <span style="color:var(--amber)">Pixel error</span>
+        <span id="vPx" style="color:var(--amber)">1 px</span>
+      </div>
+      <input type="range" id="sPx" min="1" max="20" step="1" value="1" style="accent-color:var(--amber)">
+    </div>
+    <div style="font-size:.6em;color:var(--muted);margin-top:3px;line-height:1.8">
+      <span style="color:var(--amber)">lateral_err = px_err × Z / fx</span><br>
+      <span style="opacity:.6">Pixel jitter in bbox → error in metres grows with depth</span>
+    </div>
+  </div>
+
+  <div class="err-pair">
+    <div class="err-card pass" id="card1">
+      <div class="lbl">C1 — Z = 8 m</div>
+      <div class="num" id="num1">—</div>
+      <div class="sub" id="sub1">—</div>
+      <div class="verdict" id="verd1">—</div>
+    </div>
+    <div class="err-card pass" id="card2">
+      <div class="lbl">C2 — Z = 16 m</div>
+      <div class="num" id="num2">—</div>
+      <div class="sub" id="sub2">—</div>
+      <div class="verdict" id="verd2">—</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const FX=320, FY=320, CX=320, CY=240, IW=640, IH=480;
+const THRESH=0.20; // FSAI ≤0.20m objective
+
+// True cone positions — fixed, where LiDAR actually sees them
+const CONES=[
+  {X:-1.5, Y:0.18, Z:8,  col:'#1D9E75', label:'C1'},
+  {X: 1.5, Y:0.18, Z:16, col:'#7F77DD', label:'C2'},
+];
+
+const cvTop=document.getElementById('cvTop'), ctxT=cvTop.getContext('2d');
+const cvImg=document.getElementById('cvImg'), ctxI=cvImg.getContext('2d');
+
+function draw(){
+  cvTop.width=cvTop.offsetWidth||400; cvTop.height=cvTop.offsetHeight||300;
+  cvImg.width=cvImg.offsetWidth||400; cvImg.height=cvImg.offsetHeight||300;
+  const TW=cvTop.width, TH=cvTop.height;
+  const IcW=cvImg.width, IcH=cvImg.height;
+
+  const PX=+document.getElementById('sPx').value;
+  document.getElementById('vPx').textContent=PX+' px';
+
+  // ── Compute estimated positions ──────────────────────────────────
+  // If camera tries to back-project from a pixel that is off by PX pixels,
+  // the recovered X position is: X_est = (u ± px_err - cx) * Z / fx
+  // That gives a lateral error of: ±px_err * Z / fx
+  // We show the estimated cone shifted laterally by this error amount.
+  const estimates = CONES.map(c=>{
+    const err = PX * c.Z / FX;
+    // Shift in the direction away from centre to make it visible
+    const sign = c.X >= 0 ? 1 : -1;
+    return {
+      X: c.X + sign * err,
+      Y: c.Y,
+      Z: c.Z,
+      err,
+      col: c.col,
+      label: c.label
+    };
+  });
+
+  // ── Error cards ──────────────────────────────────────────────────
+  estimates.forEach((e,i)=>{
+    const pass=e.err<=THRESH;
+    const n=i+1;
+    document.getElementById('card'+n).className='err-card '+(pass?'pass':'fail');
+    document.getElementById('num'+n).textContent=e.err.toFixed(3)+' m';
+    document.getElementById('sub'+n).textContent=PX+'px × '+CONES[i].Z+'m / '+FX;
+    document.getElementById('verd'+n).textContent=pass?'≤ 0.20 m ✓':'> 0.20 m ✗';
+  });
+
+  // ── TOP-DOWN ─────────────────────────────────────────────────────
+  // World: X ∈ [-5,5], Z ∈ [0,22]
+  function w2t(x,z){return{px:(x+5)/10*TW, py:(1-z/22)*TH*0.93+TH*0.035};}
+
+  ctxT.fillStyle='#050510'; ctxT.fillRect(0,0,TW,TH);
+
+  // Grid
+  ctxT.strokeStyle='#0b0b22'; ctxT.lineWidth=1; ctxT.beginPath();
+  for(let x=-4;x<=4;x+=2){const{px}=w2t(x,0);ctxT.moveTo(px,0);ctxT.lineTo(px,TH);}
+  for(let z=0;z<=20;z+=4){const{py}=w2t(0,z);ctxT.moveTo(0,py);ctxT.lineTo(TW,py);}
+  ctxT.stroke();
+
+  // Z labels
+  ctxT.fillStyle='#1a1a40'; ctxT.font='8px JetBrains Mono'; ctxT.textAlign='left';
+  for(let z=0;z<=20;z+=4){const{py}=w2t(-4.8,z);ctxT.fillText(z+'m',3,py+3);}
+
+  // Camera origin
+  const{px:ox,py:oy}=w2t(0,0);
+  ctxT.fillStyle='#EF9F27'; ctxT.beginPath(); ctxT.arc(ox,oy,5,0,Math.PI*2); ctxT.fill();
+  ctxT.fillStyle='#EF9F27'; ctxT.font='8px JetBrains Mono'; ctxT.textAlign='center';
+  ctxT.fillText('cam',ox,oy+14);
+
+  // FOV wedge
+  const hfov=Math.atan(CX/FX);
+  const fl=w2t(-22*Math.tan(hfov),22), fr=w2t(22*Math.tan(hfov),22);
+  ctxT.fillStyle='rgba(127,119,221,0.04)';
+  ctxT.beginPath(); ctxT.moveTo(ox,oy); ctxT.lineTo(fl.px,fl.py); ctxT.lineTo(fr.px,fr.py); ctxT.closePath(); ctxT.fill();
+  ctxT.strokeStyle='rgba(127,119,221,0.15)'; ctxT.lineWidth=1; ctxT.setLineDash([4,6]);
+  ctxT.beginPath(); ctxT.moveTo(ox,oy); ctxT.lineTo(fl.px,fl.py); ctxT.moveTo(ox,oy); ctxT.lineTo(fr.px,fr.py);
+  ctxT.stroke(); ctxT.setLineDash([]);
+
+  // Draw each cone: ghost (true) + solid (estimated) + error line
+  CONES.forEach((c,i)=>{
+    const est=estimates[i];
+    const{px:tx,py:ty}=w2t(c.X,c.Z);   // true position
+    const{px:ex,py:ey}=w2t(est.X,est.Z); // estimated position
+    const col=c.col;
+    const isFail=est.err>THRESH;
+
+    // Error line between true and estimated
+    if(est.err>0.005){
+      ctxT.strokeStyle='#E24B4A'+'88'; ctxT.lineWidth=1.5;
+      ctxT.beginPath(); ctxT.moveTo(tx,ty); ctxT.lineTo(ex,ey); ctxT.stroke();
+    }
+
+    // Ghost — true position (dashed outline square, no fill)
+    ctxT.strokeStyle=col+'88'; ctxT.lineWidth=1.5; ctxT.setLineDash([3,3]);
+    ctxT.strokeRect(tx-5,ty-5,10,10);
+    ctxT.setLineDash([]);
+    // true label
+    ctxT.fillStyle=col+'66'; ctxT.font='7px JetBrains Mono'; ctxT.textAlign='center';
+    ctxT.fillText('true',tx,ty-9);
+
+    // Solid — estimated position
+    const estCol=isFail?'#E24B4A':col;
+    ctxT.fillStyle=estCol;
+    ctxT.fillRect(ex-4,ey-4,8,8);
+    ctxT.fillStyle=estCol; ctxT.font='8px JetBrains Mono'; ctxT.textAlign='center';
+    ctxT.fillText(c.label+' est.',ex,ey-10);
+
+    // Error distance label on the line
+    if(est.err>0.02){
+      const mx=(tx+ex)/2, my=(ty+ey)/2;
+      ctxT.fillStyle='#E24B4A'; ctxT.font='bold 8px JetBrains Mono'; ctxT.textAlign='center';
+      ctxT.fillText(est.err.toFixed(2)+'m',mx,my-5);
+    }
+  });
+
+  // ── CAMERA IMAGE ─────────────────────────────────────────────────
+  function v2i(u,v){return{px:u/IW*IcW, py:v/IH*IcH};}
+
+  ctxI.fillStyle='#050510'; ctxI.fillRect(0,0,IcW,IcH);
+
+  // Grid
+  ctxI.strokeStyle='#0b0b22'; ctxI.lineWidth=1; ctxI.beginPath();
+  for(let u=0;u<=IW;u+=80){const{px}=v2i(u,0);ctxI.moveTo(px,0);ctxI.lineTo(px,IcH);}
+  for(let v=0;v<=IH;v+=60){const{py}=v2i(0,v);ctxI.moveTo(0,py);ctxI.lineTo(IcH,py);}
+  ctxI.stroke();
+
+  // Principal point crosshair
+  const{px:cpx,py:cpy}=v2i(CX,CY);
+  ctxI.strokeStyle='rgba(239,159,39,0.25)'; ctxI.lineWidth=1; ctxI.setLineDash([3,5]);
+  ctxI.beginPath(); ctxI.moveTo(cpx-12,cpy); ctxI.lineTo(cpx+12,cpy);
+  ctxI.moveTo(cpx,cpy-12); ctxI.lineTo(cpx,cpy+12);
+  ctxI.stroke(); ctxI.setLineDash([]);
+
+  // Project each cone onto image
+  CONES.forEach((c,i)=>{
+    const est=estimates[i];
+    const u=FX*(c.X/c.Z)+CX, v=FY*(-c.Y/c.Z)+CY;
+    if(u<0||u>IW||v<0||v>IH)return;
+    const{px:ip,py:jp}=v2i(u,v);
+    const col=c.col;
+    const isFail=est.err>THRESH;
+    const dispCol=isFail?'#E24B4A':col;
+
+    // Crosshair
+    ctxI.strokeStyle=col+'22'; ctxI.lineWidth=1;
+    ctxI.beginPath(); ctxI.moveTo(ip,0); ctxI.lineTo(ip,IcH);
+    ctxI.moveTo(0,jp); ctxI.lineTo(IcW,jp); ctxI.stroke();
+
+    // True bbox (solid, accurate)
+    const bwS=(FX*0.38/c.Z)/IW*IcW;
+    const bhS=(FY*0.36/c.Z)/IH*IcH;
+    ctxI.strokeStyle=col+'99'; ctxI.lineWidth=1; ctxI.setLineDash([2,3]);
+    ctxI.strokeRect(ip-bwS/2, jp-bhS/2, bwS, bhS);
+    ctxI.setLineDash([]);
+
+    // Error expansion (what happens if YOLO bbox is off by PX pixels)
+    const errPx=(PX/IW)*IcW;
+    ctxI.strokeStyle=dispCol; ctxI.lineWidth=1.5;
+    ctxI.strokeRect(ip-bwS/2-errPx, jp-bhS/2-errPx*0.4, bwS+errPx*2, bhS+errPx*0.8);
+
+    // Lateral error arrows
+    if(errPx>1.5){
+      const midY=jp;
+      ctxI.strokeStyle='#E24B4A'; ctxI.lineWidth=1.5;
+      ctxI.beginPath();
+      ctxI.moveTo(ip-bwS/2,midY); ctxI.lineTo(ip-bwS/2-errPx,midY);
+      ctxI.moveTo(ip-bwS/2-errPx+4,midY-3); ctxI.lineTo(ip-bwS/2-errPx,midY); ctxI.lineTo(ip-bwS/2-errPx+4,midY+3);
+      ctxI.moveTo(ip+bwS/2,midY); ctxI.lineTo(ip+bwS/2+errPx,midY);
+      ctxI.moveTo(ip+bwS/2+errPx-4,midY-3); ctxI.lineTo(ip+bwS/2+errPx,midY); ctxI.lineTo(ip+bwS/2+errPx-4,midY+3);
+      ctxI.stroke();
+      ctxI.fillStyle='#E24B4A'; ctxI.font='bold 8px JetBrains Mono'; ctxI.textAlign='center';
+      ctxI.fillText('±'+est.err.toFixed(3)+'m', ip, midY-bhS/2-5);
+    }
+
+    // True dot
+    ctxI.fillStyle=col; ctxI.beginPath(); ctxI.arc(ip,jp,3.5,0,Math.PI*2); ctxI.fill();
+    ctxI.fillStyle=col+'88'; ctxI.font='8px JetBrains Mono'; ctxI.textAlign='left';
+    ctxI.fillText(c.label+' u='+Math.round(u), ip+7, jp+11);
+  });
+}
+
+document.getElementById('sPx').addEventListener('input',draw);
+window.addEventListener('resize',draw);
+setTimeout(draw,60);
+</script>
+</body>
+</html>
