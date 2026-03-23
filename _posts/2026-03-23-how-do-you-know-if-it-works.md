@@ -31,6 +31,8 @@ The full set of objectives for this project is:
 5. **Simulation Validation** — validate the full pipeline in IPG CarMaker, evaluating accuracy, localisation, and computational efficiency.
 6. **SLAM Feasibility Study** — examine SLAM methodologies in Formula Student literature and assess integration pathways.
 
+Objectives 5 and 6 don't produce benchmark numbers — one is the environment everything runs inside, the other is a literature study. Objective 1 splits into two separate measurements since accuracy and speed are independent. That gives five benchmarks across objectives 1 through 4.
+
 ## Five Benchmarks
 
 **Objective 1a — mAP@50** comes from the YOLO training logs — the model was already evaluated against the FSOCO validation set during training, so this is more analysis than new measurement. What the script does is load the results from all four trained models and plot them against each other and against the 85% target line.
