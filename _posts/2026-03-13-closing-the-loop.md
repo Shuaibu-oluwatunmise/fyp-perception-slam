@@ -73,4 +73,4 @@ This is essentially how we do this:
 
 ![Image-Space Matching Architecture](/assets/img/blog/2026-03-13/debug.png)
 
-That's the full pipeline — from a spinning laser and a colour camera, down to a clean list of 3D positions. Next week moves into formal evaluation: does the system actually meet the objectives I set out for this project?
+That's the full pipeline — from a spinning laser and a colour camera, down to a clean list of 3D positions. Next week shifts focus — with the perception pipeline solid, it is time to start looking at what comes after detection. SLAM is the next piece of the puzzle.
