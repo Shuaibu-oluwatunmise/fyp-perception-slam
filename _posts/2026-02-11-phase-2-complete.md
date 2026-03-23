@@ -1,5 +1,5 @@
 ---
-title: "Phase 2 Complete: Sensor Fusion"
+title: "Phase 2: Sensor Fusion — Does It Actually Work?"
 date: 2026-02-11 17:00:00 +0000
 categories: [Week 4, Phase 2]
 tags: [ros2, sensor-fusion, camera-lidar-fusion, phase-2-complete]
