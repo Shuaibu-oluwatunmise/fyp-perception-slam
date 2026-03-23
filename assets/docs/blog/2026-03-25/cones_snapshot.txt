@@ -1,0 +1,397 @@
+header:
+  stamp:
+    sec: 1773804136
+    nanosec: 791884610
+  frame_id: odom
+cones:
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 11.160828106416547
+    y: -4.053302833584929
+    z: 0.0
+  class_name: yellow
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 11.160772602631337
+    y: -1.1066988211875795
+    z: 0.0
+  class_name: blue
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 16.048971693236712
+    y: -4.056242893534913
+    z: 0.0
+  class_name: yellow
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 16.048966833298604
+    y: -1.103748884042197
+    z: 0.0
+  class_name: blue
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 21.20487733567047
+    y: -4.057585969203188
+    z: 0.0
+  class_name: yellow
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 26.163266805981927
+    y: -4.057625171198404
+    z: 0.0
+  class_name: yellow
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 26.16326509980778
+    y: -1.1023625335085891
+    z: 0.0
+  class_name: blue
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 21.20486762811902
+    y: -1.1023965657722452
+    z: 0.0
+  class_name: blue
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 31.22479881647097
+    y: -4.058308684615592
+    z: 0.0
+  class_name: yellow
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 31.224895439077578
+    y: -1.1016928277083657
+    z: 0.0
+  class_name: blue
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 36.47722852593882
+    y: -4.057826102700082
+    z: 0.0
+  class_name: yellow
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 36.47719361083293
+    y: -1.1021120339895718
+    z: 0.0
+  class_name: blue
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 41.44860137037447
+    y: -4.067316159501599
+    z: 0.0
+  class_name: yellow
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 41.44857628687106
+    y: -1.0925878506998556
+    z: 0.0
+  class_name: blue
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 46.61792738935095
+    y: -4.0677164804630666
+    z: 0.0
+  class_name: yellow
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 46.61787807804749
+    y: -1.0921617556726404
+    z: 0.0
+  class_name: blue
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 56.39945229800668
+    y: -4.065675366042836
+    z: 0.0
+  class_name: yellow
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 56.39930448393675
+    y: -1.0942886704664572
+    z: 0.0
+  class_name: blue
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 51.41594159879252
+    y: -4.058769487127025
+    z: 0.0
+  class_name: yellow
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 51.41586859942234
+    y: -1.1011023278425798
+    z: 0.0
+  class_name: blue
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 61.35155038966741
+    y: -4.059426168546926
+    z: 0.0
+  class_name: yellow
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 61.35162869902484
+    y: -1.1005969961806175
+    z: 0.0
+  class_name: blue
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 66.7998008007237
+    y: -4.064075325035098
+    z: 0.0
+  class_name: yellow
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 66.79973432947673
+    y: -1.095874392505192
+    z: 0.0
+  class_name: blue
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 70.88300973071662
+    y: -4.062408364355857
+    z: 0.0
+  class_name: yellow
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 70.88288812994689
+    y: -1.0972934521422792
+    z: 0.0
+  class_name: blue
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 75.88027399516207
+    y: -4.075671913291541
+    z: 0.0
+  class_name: yellow
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 75.88027567075211
+    y: -1.0839262826133123
+    z: 0.0
+  class_name: blue
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 80.87533998713496
+    y: -4.07900076714751
+    z: 0.0
+  class_name: yellow
+  confidence: 1.0
+  source: ''
+  points: []
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: ''
+  position:
+    x: 80.87530226554787
+    y: -1.0805555682618255
+    z: 0.0
+  class_name: blue
+  confidence: 1.0
+  source: ''
+  points: []
+---
