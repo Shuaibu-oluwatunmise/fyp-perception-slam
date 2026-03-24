@@ -40,7 +40,7 @@ _Precision over training. All four models converge above 90% — precision isn't
 ![Recall curves](/assets/img/blog/2026-03-24/recall_comparison.png)
 _Recall over training. YOLO26s reaches 80.3% — the others fall short._
 
-Precision is high across all models — they're all good at avoiding false positives. Recall is where the gap opens up. YOLO26s at 80.3% recall means it misses roughly 1 in 5 cones in the validation set, which sounds concerning but is consistent with what the confusion matrix shows:
+Precision is high across all models — they're all good at avoiding false positives. Recall is where the gap opens up. YOLO26s at 80.3% recall means it misses roughly 1 in 5 cones in the validation set. The confusion matrix breaks down where those misses go:
 
 ![Normalized confusion matrix for YOLO26s](/assets/img/blog/2026-03-24/confusion_matrix_normalized.png)
 _Per-class performance. The background column shows what fraction of each class gets missed entirely._
@@ -99,3 +99,16 @@ This is also worth stating clearly: YOLO26s is running on raw CUDA with no Tenso
 ---
 
 Both parts of Objective 1 pass. Tomorrow is Objective 2 — localisation accuracy — which is where things get more interesting.
+
+---
+
+## Resources
+
+**[mAP Analysis Script](/fyp-perception-slam/assets/docs/blog/2026-03-24/obj1_map_analysis.py)** — `obj1_map_analysis.py`
+_Loads training logs for all four models, plots curves and summary card_
+
+**[FPS Benchmark Script](/fyp-perception-slam/assets/docs/blog/2026-03-24/obj1_fps_bench.py)** — `obj1_fps_bench.py`
+_Collects frames from ROS2, warms up GPU, runs 5 timed inference passes_
+
+**[YOLO26s Training Metrics](/fyp-perception-slam/assets/docs/blog/2026-03-24/yolo26s_results.csv)** — `yolo26s_results.csv`
+_Per-epoch loss, mAP@50, precision, and recall over 100 training epochs_

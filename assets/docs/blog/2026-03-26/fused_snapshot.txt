@@ -1,0 +1,137 @@
+header:
+  stamp:
+    sec: 1773807091
+    nanosec: 365221483
+  frame_id: Fr1A
+cones:
+- header:
+    stamp:
+      sec: 1773807091
+      nanosec: 365221483
+    frame_id: Fr1A
+  position:
+    x: 7.961765285491943
+    y: -1.4908400774002075
+    z: 0.0
+  class_name: yellow_cone
+  confidence: 0.9424362182617188
+  source: fused
+  points: []
+- header:
+    stamp:
+      sec: 1773807091
+      nanosec: 365221483
+    frame_id: Fr1A
+  position:
+    x: 7.961765762329101
+    y: 1.4908405542373657
+    z: 0.0
+  class_name: blue_cone
+  confidence: 0.9388970136642456
+  source: fused
+  points: []
+- header:
+    stamp:
+      sec: 1773807091
+      nanosec: 365221483
+    frame_id: Fr1A
+  position:
+    x: 12.962760444641113
+    y: -1.4917757511138916
+    z: 0.0
+  class_name: yellow_cone
+  confidence: 0.8658514022827148
+  source: fused
+  points: []
+- header:
+    stamp:
+      sec: 1773807091
+      nanosec: 365221483
+    frame_id: Fr1A
+  position:
+    x: 12.962761398315429
+    y: 1.4917759895324707
+    z: 0.0
+  class_name: blue_cone
+  confidence: 0.8733956217765808
+  source: fused
+  points: []
+- header:
+    stamp:
+      sec: 1773807091
+      nanosec: 365221483
+    frame_id: Fr1A
+  position:
+    x: 17.964375968933105
+    y: -1.5280503034591675
+    z: 0.0
+  class_name: yellow_cone
+  confidence: 0.5402362942695618
+  source: fused
+  points: []
+- header:
+    stamp:
+      sec: 1773807091
+      nanosec: 365221483
+    frame_id: Fr1A
+  position:
+    x: 22.967777725219726
+    y: -1.472143292427063
+    z: 0.0
+  class_name: yellow_cone
+  confidence: 0.6985704302787781
+  source: fused
+  points: []
+- header:
+    stamp:
+      sec: 1773807091
+      nanosec: 365221483
+    frame_id: Fr1A
+  position:
+    x: 27.95985841369629
+    y: -1.4875822067260742
+    z: 0.0
+  class_name: yellow_cone
+  confidence: 0.65114825963974
+  source: fused
+  points: []
+- header:
+    stamp:
+      sec: 1773807091
+      nanosec: 365221483
+    frame_id: Fr1A
+  position:
+    x: 27.95985841369629
+    y: 1.4875822067260742
+    z: 0.0
+  class_name: blue_cone
+  confidence: 0.5825198292732239
+  source: fused
+  points: []
+- header:
+    stamp:
+      sec: 1773807091
+      nanosec: 365221483
+    frame_id: Fr1A
+  position:
+    x: 22.967770095825195
+    y: 1.4721428155899048
+    z: 0.0
+  class_name: blue_cone
+  confidence: 0.7826830744743347
+  source: fused
+  points: []
+- header:
+    stamp:
+      sec: 1773807091
+      nanosec: 365221483
+    frame_id: Fr1A
+  position:
+    x: 17.964380737304687
+    y: 1.5280508995056152
+    z: 0.0
+  class_name: blue_cone
+  confidence: 0.8403137922286987
+  source: fused
+  points: []
+---
