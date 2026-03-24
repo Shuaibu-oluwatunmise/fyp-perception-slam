@@ -85,11 +85,11 @@ YOLO is the consistent bottleneck at 61.1 ms mean. DBSCAN runs in parallel at 43
 
 The DBSCAN p95 of 197 ms looks alarming but it doesn't matter much in practice. That spike only affects total latency on frames where DBSCAN takes longer than YOLO — which is rare. When it does happen, total latency spikes above the mean but the 3-trial trace shows this is infrequent.
 
-The p95 end-to-end is **99.0 ms** — 1 ms from the 100 ms target. That's tight. It passes, but it's not a comfortable margin. The mean of 80 ms has 20 ms headroom, but the tail is close to the edge. Worth noting that none of this uses TensorRT — YOLO26s runs on raw CUDA. TensorRT would bring inference down to roughly 30–40 ms on the Jetson, which would push the p95 well clear of the target.
+The p95 end-to-end is **99.0 ms**. p95 means 95% of frames complete within that time — so technically the target is met, but 5% of frames are taking longer than 99 ms and some of those will exceed 100 ms. It's a pass on the metric as defined, but it's not a clean one. The mean of 80 ms has 20 ms headroom, but the tail is close to the edge. Worth noting that none of this uses TensorRT — YOLO26s runs on raw CUDA. TensorRT would bring inference down to roughly 30–40 ms on the Jetson, which would push the p95 well clear of the target.
 
 Run-to-run standard deviation is ±0.9 ms — the system is thermally stable across separate trials, no drift between runs.
 
-**Objective 4: PASS — 80.0 ms mean, 99.0 ms p95 against a ≤100 ms target.**
+**Objective 4: PASS (qualified) — 80.0 ms mean, 99.0 ms p95 against a ≤100 ms target. 5% of frames exceed 99 ms and some will breach 100 ms.**
 
 ---
 
