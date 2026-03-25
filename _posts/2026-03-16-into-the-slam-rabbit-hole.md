@@ -29,7 +29,7 @@ The way Thrun, Burgard, and Fox frame it in *Probabilistic Robotics* [^13] — t
 
 $$p(\mathbf{x}_{1:t},\, m \mid \mathbf{z}_{1:t},\, \mathbf{u}_{1:t})$$
 
-The robot's full trajectory and the map are estimated jointly, given all sensor observations and control inputs up to time $t$. Every sensor observation updates both. Every movement updates both. Neither is ever known with certainty; both are continuously estimated from noisy data and imperfect odometry.
+The robot's full trajectory and the map are estimated jointly, given all sensor observations and control inputs up to the current time. Every sensor observation updates both. Every movement updates both. Neither is ever known with certainty; both are continuously estimated from noisy data and imperfect odometry.
 
 The chicken-and-egg structure is real. Accurate mapping requires knowing where you are. Accurate localisation is easier with a map to reference against. Both must be estimated simultaneously from the same stream of sensor data. The entire field of SLAM is essentially the question of how to resolve this mutual dependency without one estimate corrupting the other.
 
