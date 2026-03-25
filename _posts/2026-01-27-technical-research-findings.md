@@ -60,4 +60,4 @@ Now the real work begins. I need to stop reading and start coding. The goal for 
 
 ---
 
-***Citations:** Refer to the [Literature Review](/fyp-perception-slam/tabs/literature-review/) page for the full paper details referenced here, specifically [1], [5], and [6].*
+***Citations:** Refer to the [Literature Review](/fyp-perception-slam/literature-review/) page for the full paper details referenced here, specifically [1], [5], and [6].*
