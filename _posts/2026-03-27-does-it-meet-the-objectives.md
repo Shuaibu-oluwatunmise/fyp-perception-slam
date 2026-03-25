@@ -40,7 +40,7 @@ The 87.8% mAP@50 passes the ≥85% target, but it's worth being honest about wha
 
 ## What Didn't Meet the Target
 
-The longitudinal positional error is the honest failure in this evaluation. Up to ~1.5 m under motion against a 0.20 m target is not close. It appears speed-dependent — at a standstill the positions are correct — but the relationship hasn't been formally characterised and the root cause isn't fully understood. On a straight track the longitudinal offset matters less, but on a turn it directly affects where the path planner thinks the corner apex is. That's not something that can be reasoned away.
+The longitudinal positional error is the honest failure in this evaluation. Up to ~1.5 m under motion against a 0.20 m target is not close. A follow-up investigation confirmed the relationship is linear with speed — a fit across two runs at different speed profiles gave an implied effective latency of ~130 ms and an R² of 0.658. At 10 m/s the forward bias is around 1.3 m. The most consistent explanation is the local mapper's confirmation mechanism adding delay on top of the raw sensor latency, though other factors weren't isolated and the cause hasn't been fully pinned down. On a straight track the offset matters less, but on a turn it directly affects where the path planner thinks the corner apex is. That's not something that can be reasoned away.
 
 ## What This Means
 

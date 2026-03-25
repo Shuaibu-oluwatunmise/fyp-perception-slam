@@ -31,7 +31,9 @@ The full set of objectives for this project is:
 5. **Simulation Validation** — validate the full pipeline in IPG CarMaker, evaluating accuracy, localisation, and computational efficiency.
 6. **SLAM Feasibility Study** — examine SLAM methodologies in Formula Student literature and assess integration pathways.
 
-Objectives 5 and 6 don't produce benchmark numbers — one is the environment everything runs inside, the other is a literature study. Objective 1 splits into two separate measurements since accuracy and speed are independent. That gives five benchmarks across objectives 1 through 4.
+Objectives 5 and 6 are addressed differently. Objective 5 — simulation validation — is the context everything here runs inside; running the benchmarks in CarMaker with ground truth available for comparison is the validation. Objective 6 — the SLAM feasibility study — was covered in Week 9: the research into EKF-SLAM and graph-SLAM, the mapping architecture that ended up running, and the honest assessment of what was and wasn't built.
+
+Objective 1 splits into two separate measurements since accuracy and speed are independent. That gives five benchmarks across objectives 1 through 4.
 
 ## Five Benchmarks
 

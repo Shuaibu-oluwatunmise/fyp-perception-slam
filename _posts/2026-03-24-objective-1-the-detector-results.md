@@ -5,7 +5,7 @@ categories: [Week 10, Testing & Evaluation]
 tags: [yolo, yolo26s, map, fps, benchmarking, evaluation, object-detection]
 pin: false
 image:
-  path: /assets/img/thumbnails/40.png
+  path: /assets/img/thumbnails/40.jpg
   alt: YOLO26s Detector Results
   header: false
 ---
