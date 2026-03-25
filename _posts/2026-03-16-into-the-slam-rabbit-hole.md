@@ -53,7 +53,7 @@ The first thing I did was read through published technical material from competi
 
 **municHMotorsport (TU Munich)** published a paper called *clara: Cone-based Localization for Autonomous Racing* [^14]. It is the most complete public description of landmark-based cone SLAM I found for this exact domain. Their approach centres on EKF-SLAM with a greedy one-to-one data association strategy, specifically tuned for the timing and observation patterns of a Formula Student track. They have won the driverless class at Formula Student Germany multiple times. If a method works at that level consistently, it is worth taking seriously.
 
-**AMZ Racing (ETH Zürich)** and **KTH Formula Student** both use variants of landmark-based SLAM as their core mapping and localisation back-ends. The pattern across all three teams — and frankly across everything I read about Formula Student AI — is consistent: discrete cones as landmarks, some form of probabilistic filter or graph optimisation over those landmarks, and a data association step to match incoming observations to previously seen cones.
+**AMZ Racing (ETH Zürich)** published a full system description [^17] and use a particle filter-based SLAM back-end. **KTH Formula Student** have published comparisons of EKF and graph-based SLAM variants for the same cone-track problem. The pattern across all three teams — and frankly across everything I read about Formula Student AI — is consistent: discrete cones as landmarks, some form of probabilistic filter or graph optimisation over those landmarks, and a data association step to match incoming observations to previously seen cones.
 
 This convergence across teams gave me confidence that the landmark-based direction was correct. When the best teams in the world independently arrive at the same architectural decision, that is a signal.
 
@@ -137,12 +137,13 @@ I did have a go at implementing EKF-SLAM. Not sure if it is fully correct, not s
 
 ---
 
-*Citations: refer to the [Literature Review](/fyp-perception-slam/literature-review/) page for full paper details, specifically [6], [7], [8], [13], [14], [15], [16].*
+*Citations: refer to the [Literature Review](/fyp-perception-slam/literature-review/) page for full paper details, specifically [6], [7], [8], [13], [14], [15], [16], [17].*
 
 [^6]: S. Macenski and I. Jambrecic, "SLAM Toolbox: SLAM for the Dynamic World," *JOSS*, 2021.
 [^7]: S. Y. Kim et al., "Improving Sensor Adaptability in Cartographer SLAM," *Sensors*, 2025.
 [^8]: A. Kucuksubasi and A. B. Can, "Comparative Performance Analysis of SLAM Toolbox and Cartographer in ROS 2," *Electronics*, 2025.
-[^13]: S. Thrun, W. Burgard, and D. Fox, *Probabilistic Robotics*. MIT Press, 2005.
-[^14]: A. Isenko et al. (municHMotorsport), "clara: Cone-based Localization for Autonomous Racing," *arXiv*, 2022.
+[^13]: S. Thrun, W. Burgard, and D. Fox, *Probabilistic Robotics*. MIT Press, 2005. [MIT Press](https://mitpress.mit.edu/9780262201629/probabilistic-robotics/)
+[^14]: A. Isenko et al. (municHMotorsport), *clara: Cone-based Localization for Autonomous Racing*. GitHub, 2022. [Repository](https://github.com/cirquit/clara)
 [^15]: G. Grisetti et al., "A Tutorial on Graph-Based SLAM," *IEEE ITS Magazine*, 2010.
 [^16]: M. Kaess et al., "iSAM2: Incremental Smoothing and Mapping Using the Bayes Tree," *IJRR*, 2012.
+[^17]: M. Kabzan et al. (AMZ Racing, ETH Zürich), "AMZ Driverless: The Full Autonomous Racing System," *Journal of Field Robotics*, 2020. [arXiv](https://arxiv.org/abs/1905.05150)

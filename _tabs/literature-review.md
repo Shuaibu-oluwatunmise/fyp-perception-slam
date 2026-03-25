@@ -203,7 +203,7 @@ window.addEventListener('load', function () {
 <div class="paper-item" id="ref-13">
     <span class="paper-citation">[13] S. Thrun, W. Burgard, and D. Fox, <em>Probabilistic Robotics</em>. Cambridge, MA: MIT Press, 2005.</span>
     <div class="paper-links">
-        <a href="https://www.probabilistic-robotics.org/" target="_blank"><i class="fas fa-external-link-alt"></i> Book Website</a>
+        <a href="https://mitpress.mit.edu/9780262201629/probabilistic-robotics/" target="_blank"><i class="fas fa-external-link-alt"></i> MIT Press</a>
     </div>
     <div class="paper-relevance">
         <strong>Relevance:</strong> The foundational textbook on SLAM and probabilistic estimation. The EKF-SLAM algorithm (Table 10.2) used as the reference implementation for this project is taken directly from this book.
@@ -212,12 +212,23 @@ window.addEventListener('load', function () {
 
 <!-- [14] SLAM > clara (municHMotorsport) -->
 <div class="paper-item" id="ref-14">
-    <span class="paper-citation">[14] A. Isenko et al. (municHMotorsport), "clara: Cone-based Localization for Autonomous Racing," <em>arXiv preprint</em>, 2022.</span>
+    <span class="paper-citation">[14] A. Isenko et al. (municHMotorsport), <em>clara: Cone-based Localization for Autonomous Racing</em>. GitHub Repository, 2022.</span>
     <div class="paper-links">
-        <a href="https://arxiv.org/abs/2209.11485" target="_blank"><i class="fas fa-external-link-alt"></i> Read Paper</a>
+        <a href="https://github.com/cirquit/clara" target="_blank"><i class="fab fa-github"></i> GitHub Repository</a>
     </div>
     <div class="paper-relevance">
         <strong>Relevance:</strong> The most complete public description of landmark-based EKF-SLAM applied specifically to Formula Student cone environments. Used to inform data association strategy and system design decisions in this project.
+    </div>
+</div>
+
+<!-- [17] SLAM > AMZ Driverless -->
+<div class="paper-item" id="ref-17">
+    <span class="paper-citation">[17] M. Kabzan et al. (AMZ Racing, ETH Zürich), "AMZ Driverless: The Full Autonomous Racing System," <em>Journal of Field Robotics</em>, vol. 37, no. 7, pp. 1267–1294, 2020.</span>
+    <div class="paper-links">
+        <a href="https://arxiv.org/abs/1905.05150" target="_blank"><i class="fas fa-external-link-alt"></i> Read Paper</a>
+    </div>
+    <div class="paper-relevance">
+        <strong>Relevance:</strong> End-to-end system description from a multi-year Formula Student Driverless champion. Covers perception, SLAM, and path planning. Used as evidence of convergence on landmark-based SLAM across top competitive teams.
     </div>
 </div>
 
