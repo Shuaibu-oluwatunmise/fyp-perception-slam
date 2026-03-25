@@ -186,6 +186,50 @@ summary::-webkit-details-marker {
     </div>
 </div>
 
+<!-- [13] SLAM > Probabilistic Robotics -->
+<div class="paper-item">
+    <span class="paper-citation">[13] S. Thrun, W. Burgard, and D. Fox, <em>Probabilistic Robotics</em>. Cambridge, MA: MIT Press, 2005.</span>
+    <div class="paper-links">
+        <a href="https://www.probabilistic-robotics.org/" target="_blank"><i class="fas fa-external-link-alt"></i> Book Website</a>
+    </div>
+    <div class="paper-relevance">
+        <strong>Relevance:</strong> The foundational textbook on SLAM and probabilistic estimation. The EKF-SLAM algorithm (Table 10.2) used as the reference implementation for this project is taken directly from this book.
+    </div>
+</div>
+
+<!-- [14] SLAM > clara (municHMotorsport) -->
+<div class="paper-item">
+    <span class="paper-citation">[14] A. Isenko et al. (municHMotorsport), "clara: Cone-based Localization for Autonomous Racing," <em>arXiv preprint</em>, 2022.</span>
+    <div class="paper-links">
+        <a href="https://arxiv.org/abs/2209.11485" target="_blank"><i class="fas fa-external-link-alt"></i> Read Paper</a>
+    </div>
+    <div class="paper-relevance">
+        <strong>Relevance:</strong> The most complete public description of landmark-based EKF-SLAM applied specifically to Formula Student cone environments. Used to inform data association strategy and system design decisions in this project.
+    </div>
+</div>
+
+<!-- [15] SLAM > Graph-Based Tutorial -->
+<div class="paper-item">
+    <span class="paper-citation">[15] G. Grisetti, R. Kümmerle, C. Stachniss, and W. Burgard, "A Tutorial on Graph-Based SLAM," <em>IEEE Intelligent Transportation Systems Magazine</em>, vol. 2, no. 4, pp. 31–43, 2010.</span>
+    <div class="paper-links">
+        <a href="https://ieeexplore.ieee.org/document/5681215" target="_blank"><i class="fas fa-external-link-alt"></i> Read Paper</a>
+    </div>
+    <div class="paper-relevance">
+        <strong>Relevance:</strong> The definitive tutorial on pose-graph SLAM. Used to understand the front-end/back-end architecture and the non-linear least squares formulation that underpins graph-based methods.
+    </div>
+</div>
+
+<!-- [16] SLAM > iSAM2 -->
+<div class="paper-item">
+    <span class="paper-citation">[16] M. Kaess, H. Johannsson, R. Roberts, V. Ila, J. Leonard, and F. Dellaert, "iSAM2: Incremental Smoothing and Mapping Using the Bayes Tree," <em>International Journal of Robotics Research</em>, vol. 31, no. 2, pp. 216–235, 2012.</span>
+    <div class="paper-links">
+        <a href="https://journals.sagepub.com/doi/10.1177/0278364911430419" target="_blank"><i class="fas fa-external-link-alt"></i> Read Paper</a>
+    </div>
+    <div class="paper-relevance">
+        <strong>Relevance:</strong> Describes iSAM2, one of the sparse back-end solvers used in graph-based SLAM. Referenced as context for why full graph-SLAM back-end implementation is a significant engineering undertaking.
+    </div>
+</div>
+
 </div>
 </details>
 

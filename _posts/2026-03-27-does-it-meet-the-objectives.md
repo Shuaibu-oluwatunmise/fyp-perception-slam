@@ -5,7 +5,7 @@ categories: [Week 10, Testing & Evaluation]
 tags: [evaluation, benchmarking, perception, yolo26s, fusion, localisation, latency]
 pin: false
 image:
-  path: /assets/img/thumbnails/40.png
+  path: /assets/img/thumbnails/43.png
   alt: Evaluation Summary
   header: false
 ---

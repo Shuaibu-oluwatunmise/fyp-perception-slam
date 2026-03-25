@@ -5,7 +5,7 @@ categories: [Week 10, Testing & Evaluation]
 tags: [testing, benchmarking, methodology, perception, ros2, carmaker, evaluation]
 pin: false
 image:
-  path: /assets/img/thumbnails/36.png
+  path: /assets/img/thumbnails/39.png
   alt: Testing Methodology
   header: false
 ---

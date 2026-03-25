@@ -5,7 +5,7 @@ categories: [Week 10, Testing & Evaluation]
 tags: [localisation, accuracy, fusion, benchmarking, evaluation, carmaker, odometry]
 pin: false
 image:
-  path: /assets/img/thumbnails/38.png
+  path: /assets/img/thumbnails/41.png
   alt: Localisation Accuracy Results
   header: false
 ---

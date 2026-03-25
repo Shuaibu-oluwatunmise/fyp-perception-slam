@@ -5,7 +5,7 @@ categories: [Week 10, Testing & Evaluation]
 tags: [sensor-fusion, lidar, camera, latency, benchmarking, evaluation, ros2]
 pin: false
 image:
-  path: /assets/img/thumbnails/39.png
+  path: /assets/img/thumbnails/42.png
   alt: Range and Latency Results
   header: false
 ---
