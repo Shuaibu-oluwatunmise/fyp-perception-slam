@@ -82,6 +82,19 @@ summary::-webkit-details-marker {
 
 </style>
 
+<script>
+window.addEventListener('load', function () {
+  if (window.location.hash) {
+    const target = document.querySelector(window.location.hash);
+    if (target) {
+      const details = target.closest('details');
+      if (details) details.open = true;
+      setTimeout(function () { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+    }
+  }
+});
+</script>
+
 <div class="literature-container">
 
 <details>
@@ -154,7 +167,7 @@ summary::-webkit-details-marker {
 <div class="content-box">
 
 <!-- [6] SLAM > Toolbox -->
-<div class="paper-item">
+<div class="paper-item" id="ref-6">
     <span class="paper-citation">[6] S. Macenski and I. Jambrecic, "SLAM Toolbox: SLAM for the Dynamic World," <em>Journal of Open Source Software</em>, vol. 6, no. 61, p. 2783, 2021.</span>
     <div class="paper-links">
         <a href="https://joss.theoj.org/papers/10.21105/joss.02783" target="_blank"><i class="fas fa-external-link-alt"></i> Read Paper</a>
@@ -165,7 +178,7 @@ summary::-webkit-details-marker {
 </div>
 
 <!-- [7] SLAM > Cartographer -->
-<div class="paper-item">
+<div class="paper-item" id="ref-7">
     <span class="paper-citation">[7] S. Y. Kim et al., "Improving Sensor Adaptability and Functionality in Cartographer Simultaneous Localization and Mapping," <em>Sensors</em>, vol. 25, no. 6, 2025.</span>
     <div class="paper-links">
         <a href="https://www.mdpi.com/1424-8220/25/6/1808" target="_blank"><i class="fas fa-external-link-alt"></i> Read Paper</a>
@@ -176,7 +189,7 @@ summary::-webkit-details-marker {
 </div>
 
 <!-- [8] SLAM > Comparison -->
-<div class="paper-item">
+<div class="paper-item" id="ref-8">
     <span class="paper-citation">[8] A. Kucuksubasi and A. B. Can, "From Simulation to Reality: Comparative Performance Analysis of SLAM Toolbox and Cartographer in ROS 2," <em>Electronics</em>, vol. 14, no. 24, 2025.</span>
     <div class="paper-links">
         <a href="https://www.mdpi.com/2079-9292/14/24/4822" target="_blank"><i class="fas fa-external-link-alt"></i> Read Paper</a>
@@ -187,10 +200,10 @@ summary::-webkit-details-marker {
 </div>
 
 <!-- [13] SLAM > Probabilistic Robotics -->
-<div class="paper-item">
+<div class="paper-item" id="ref-13">
     <span class="paper-citation">[13] S. Thrun, W. Burgard, and D. Fox, <em>Probabilistic Robotics</em>. Cambridge, MA: MIT Press, 2005.</span>
     <div class="paper-links">
-        <a href="https://www.probabilistic-robotics.org/" target="_blank"><i class="fas fa-external-link-alt"></i> Book Website</a>
+        <a href="https://mitpress.mit.edu/9780262201629/probabilistic-robotics/" target="_blank"><i class="fas fa-external-link-alt"></i> MIT Press</a>
     </div>
     <div class="paper-relevance">
         <strong>Relevance:</strong> The foundational textbook on SLAM and probabilistic estimation. The EKF-SLAM algorithm (Table 10.2) used as the reference implementation for this project is taken directly from this book.
@@ -198,18 +211,29 @@ summary::-webkit-details-marker {
 </div>
 
 <!-- [14] SLAM > clara (municHMotorsport) -->
-<div class="paper-item">
-    <span class="paper-citation">[14] A. Isenko et al. (municHMotorsport), "clara: Cone-based Localization for Autonomous Racing," <em>arXiv preprint</em>, 2022.</span>
+<div class="paper-item" id="ref-14">
+    <span class="paper-citation">[14] A. Isenko et al. (municHMotorsport), <em>clara: Cone-based Localization for Autonomous Racing</em>. GitHub Repository, 2022.</span>
     <div class="paper-links">
-        <a href="https://arxiv.org/abs/2209.11485" target="_blank"><i class="fas fa-external-link-alt"></i> Read Paper</a>
+        <a href="https://github.com/cirquit/clara" target="_blank"><i class="fab fa-github"></i> GitHub Repository</a>
     </div>
     <div class="paper-relevance">
         <strong>Relevance:</strong> The most complete public description of landmark-based EKF-SLAM applied specifically to Formula Student cone environments. Used to inform data association strategy and system design decisions in this project.
     </div>
 </div>
 
+<!-- [17] SLAM > AMZ Driverless -->
+<div class="paper-item" id="ref-17">
+    <span class="paper-citation">[17] M. Kabzan et al. (AMZ Racing, ETH Zürich), "AMZ Driverless: The Full Autonomous Racing System," <em>Journal of Field Robotics</em>, vol. 37, no. 7, pp. 1267–1294, 2020.</span>
+    <div class="paper-links">
+        <a href="https://arxiv.org/abs/1905.05150" target="_blank"><i class="fas fa-external-link-alt"></i> Read Paper</a>
+    </div>
+    <div class="paper-relevance">
+        <strong>Relevance:</strong> End-to-end system description from a multi-year Formula Student Driverless champion. Covers perception, SLAM, and path planning. Used as evidence of convergence on landmark-based SLAM across top competitive teams.
+    </div>
+</div>
+
 <!-- [15] SLAM > Graph-Based Tutorial -->
-<div class="paper-item">
+<div class="paper-item" id="ref-15">
     <span class="paper-citation">[15] G. Grisetti, R. Kümmerle, C. Stachniss, and W. Burgard, "A Tutorial on Graph-Based SLAM," <em>IEEE Intelligent Transportation Systems Magazine</em>, vol. 2, no. 4, pp. 31–43, 2010.</span>
     <div class="paper-links">
         <a href="https://ieeexplore.ieee.org/document/5681215" target="_blank"><i class="fas fa-external-link-alt"></i> Read Paper</a>
@@ -220,7 +244,7 @@ summary::-webkit-details-marker {
 </div>
 
 <!-- [16] SLAM > iSAM2 -->
-<div class="paper-item">
+<div class="paper-item" id="ref-16">
     <span class="paper-citation">[16] M. Kaess, H. Johannsson, R. Roberts, V. Ila, J. Leonard, and F. Dellaert, "iSAM2: Incremental Smoothing and Mapping Using the Bayes Tree," <em>International Journal of Robotics Research</em>, vol. 31, no. 2, pp. 216–235, 2012.</span>
     <div class="paper-links">
         <a href="https://journals.sagepub.com/doi/10.1177/0278364911430419" target="_blank"><i class="fas fa-external-link-alt"></i> Read Paper</a>
