@@ -3,8 +3,7 @@
 # Import the theme
 theme: jekyll-theme-chirpy
 
-# Show future-dated posts in development
-future: true
+future: false
 
 # The language of the webpage
 lang: en

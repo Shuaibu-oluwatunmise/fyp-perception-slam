@@ -11,6 +11,10 @@ on:
   push:
     branches: ["main"]
 
+  # Rebuilds daily at midnight UTC so future-dated posts go live on their date
+  schedule:
+    - cron: '0 0 * * *'
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
