@@ -1,6 +1,6 @@
 ---
 title: "Does It Meet the Objectives?"
-date: 2026-03-27 17:00:00 +0000
+date: 2026-03-27 00:00:00 +0000
 categories: [Week 10, Testing & Evaluation]
 tags: [evaluation, benchmarking, perception, yolo26s, fusion, localisation, latency]
 pin: false

@@ -1,6 +1,6 @@
 ---
 title: "Objectives 3 and 4: Range and Latency"
-date: 2026-03-26 17:00:00 +0000
+date: 2026-03-26 00:00:00 +0000
 categories: [Week 10, Testing & Evaluation]
 tags: [sensor-fusion, lidar, camera, latency, benchmarking, evaluation, ros2]
 pin: false
