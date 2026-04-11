@@ -1,0 +1,241 @@
+---
+---
+
+/* prettier-ignore */
+@use 'main
+{%- if jekyll.environment == 'production' -%}
+  .bundle
+{%- endif -%}
+';
+
+/* append your custom style below */
+
+// ─── Featured Post Card ───────────────────────────────────────────────────────
+
+@keyframes featured-shimmer {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.card-featured {
+  position: relative;
+  border-radius: 0.5rem;
+  margin-bottom: 2.5rem !important;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  // Gradient border via pseudo-element — sits behind the card
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: calc(0.5rem + 2px);
+    background: linear-gradient(135deg, #1d4ed8, #6366f1, #a855f7, #6366f1, #1d4ed8);
+    background-size: 300% 300%;
+    animation: featured-shimmer 6s ease infinite;
+    z-index: 0;
+  }
+
+  // Card sits above the pseudo-element border
+  // Override link colour so it doesn't bleed into card text
+  > a {
+    position: relative;
+    z-index: 1;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    display: block;
+    color: inherit !important;
+    text-decoration: none !important;
+
+    &:hover {
+      color: inherit !important;
+    }
+  }
+
+  box-shadow:
+    0 8px 40px rgba(99, 102, 241, 0.18),
+    0 2px 12px rgba(0, 0, 0, 0.35) !important;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow:
+      0 16px 56px rgba(99, 102, 241, 0.28),
+      0 4px 20px rgba(0, 0, 0, 0.45) !important;
+  }
+
+  // ── No-thumbnail gradient banner ──────────────────────────────────────────
+
+  .featured-gradient {
+    width: 100%;
+    height: 380px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(160deg, #060b18 0%, #0e1529 35%, #150d2e 65%, #080515 100%);
+
+    // Subtle grid
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(99, 102, 241, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 102, 241, 0.07) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    // Radial glows
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 18% 55%, rgba(99, 102, 241, 0.3) 0%, transparent 55%),
+        radial-gradient(ellipse at 82% 28%, rgba(168, 85, 247, 0.22) 0%, transparent 48%),
+        radial-gradient(ellipse at 50% 90%, rgba(29, 78, 216, 0.18) 0%, transparent 40%);
+    }
+  }
+
+  // Watermark text inside gradient — positioned via inline element in template
+  .featured-watermark {
+    position: absolute;
+    bottom: 1.75rem;
+    left: 1.75rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(165, 180, 252, 0.35);
+    z-index: 1;
+    line-height: 1.8;
+    pointer-events: none;
+  }
+
+  // ── Thumbnail banner (when image is present) ──────────────────────────────
+
+  .featured-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    overflow: hidden;
+    background: #0d1117;
+  }
+
+  .featured-banner {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  &:hover .featured-banner {
+    transform: scale(1.03);
+  }
+
+  // ── Badge ─────────────────────────────────────────────────────────────────
+
+  .featured-badge {
+    position: absolute;
+    top: 1.2rem;
+    left: 1.2rem;
+    padding: 0.45rem 1.1rem;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    z-index: 2;
+    white-space: nowrap;
+    color: #fff;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.5);
+  }
+
+  // ── Card body ─────────────────────────────────────────────────────────────
+
+  .card-body {
+    padding: 1.75rem 2rem 2rem;
+  }
+
+  .featured-title {
+    font-size: 1.7rem !important;
+    font-weight: 700 !important;
+    line-height: 1.3;
+  }
+
+  .card-text,
+  .card-text p,
+  .card-text * {
+    font-size: 0.97rem;
+    line-height: 1.7;
+  }
+
+  .post-meta {
+    font-size: 0.875rem;
+    opacity: 1;
+  }
+}
+
+// Featured card text — forced dark values since theme_mode: dark is set in config
+.card-featured {
+  .featured-title {
+    color: #f8fafc !important;
+    background: linear-gradient(135deg, #ffffff 40%, #c4b5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .card-text,
+  .card-text p,
+  .card-text * {
+    color: #e2e8f0 !important;
+  }
+
+  .post-meta,
+  .post-meta * {
+    color: #f1f5f9 !important;
+  }
+}
+
+// ─── Sidebar Contrast (light mode) ───────────────────────────────────────────
+
+#sidebar {
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.08) !important;
+
+  // Nav link depth — subtle pill background on hover and active
+  li.nav-item {
+    a.nav-link {
+      border-radius: 0.4rem;
+      transition: background 0.15s ease, box-shadow 0.15s ease;
+
+      &:hover {
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    &.active a.nav-link {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+  }
+}
+
+// ─── Normal Card Contrast ─────────────────────────────────────────────────────
+// Applied unconditionally — dark mode is forced via _config.yml so
+// [data-mode='dark'] is not set as an attribute. Subtle borders are fine in
+// either mode anyway.
+
+.card-wrapper.card:not(.card-featured) {
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.45) !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.16) !important;
+    box-shadow: 0 5px 24px rgba(0, 0, 0, 0.6) !important;
+    transform: translateY(-2px);
+  }
+}
